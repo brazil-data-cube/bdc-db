@@ -15,6 +15,9 @@ from flask import current_app
 from flask_alembic import Alembic
 from sqlalchemy.orm import configure_mappers
 
+from . import config as _config
+from .db import db as _db
+
 
 def alembic_include_object(object, name, type_, reflected, compare_to):
     """Ignores the tables in 'exclude_tables'.
@@ -26,7 +29,7 @@ def alembic_include_object(object, name, type_, reflected, compare_to):
     Args:
         object: A SchemaItem object ( Table, Column, Index UniqueConstraint, or ForeignKeyConstraint object).
         name: The name of the object.
-        type\_: A string describing the type of object ("table", "column", "index", "unique_constraint", or "foreign_key_constraint").
+        type_: A string describing the type of object ("table", "column", "index", "unique_constraint", or "foreign_key_constraint").
         reflected: True if the given object was produced based on table reflection, False if it’s from a local MetaData object.
         compare_to: The object being compared against, if available, else None.
 
@@ -72,7 +75,7 @@ class BrazilDataCubeDB:
 
         # prepare the configuration for multiple named branches
         # according to each package entry point
-        script_location = pkg_resources.resource_filename('bdc_bdc', 'alembic')
+        script_location = pkg_resources.resource_filename('bdc_db', 'alembic')
 
         version_locations = [
             (base_entry.name, pkg_resources.resource_filename(
@@ -125,20 +128,17 @@ class BrazilDataCubeDB:
             kwargs: optional Arguments to Flask-SQLAlchemy.
         """
         # Setup SQLAlchemy
-        app.config.setdefault(
-            'SQLALCHEMY_DATABASE_URI',
-            os.environ.get('SQLALCHEMY_DATABASE_URI')
-        )
+        app.config.setdefault('SQLALCHEMY_DATABASE_URI',
+                              _config.SQLALCHEMY_DATABASE_URI)
 
-        app.config.setdefault(
-            'SQLALCHEMY_TRACK_MODIFICATIONS',
-            os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS', False)
-        )
+        app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS',
+                              _config.SQLALCHEMY_TRACK_MODIFICATIONS)
 
-        app.config.setdefault('SQLALCHEMY_ECHO', False)
+        app.config.setdefault('SQLALCHEMY_ECHO',
+                              _config.SQLALCHEMY_ECHO)
 
         # Initialize Flask-SQLAlchemy extension.
-        database = kwargs.get('db', db)
+        database = kwargs.get('db', _db)
         database.init_app(app)
 
         # Loads all models
