@@ -6,9 +6,9 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-==================================================================
-Database Management for Brazil Data Cube Applications and Services
-==================================================================
+============================================================================
+Database Management Extension for Brazil Data Cube Applications and Services
+============================================================================
 
 
 .. image:: https://img.shields.io/badge/license-MIT-green
