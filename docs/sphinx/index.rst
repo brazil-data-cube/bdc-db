@@ -20,6 +20,9 @@ BDC-DB Extension
    :maxdepth: 2
    :caption: API Reference
 
+   installation
+   configurations
+   usage
    api
 
 
