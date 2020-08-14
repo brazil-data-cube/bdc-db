@@ -12,5 +12,4 @@ include *.sh
 include LICENSE
 include pytest.ini
 recursive-include bdc_db *.py
-
-
+recursive-include bdc_db *.mako
