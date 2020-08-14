@@ -6,8 +6,7 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-Usage
-=====
+.. include:: ../../USAGE.rst
 
 
-.. automodule:: bdc_db.cli
+.. .. automodule:: bdc_db.cli
