@@ -31,7 +31,14 @@ def cli():
     """
 
 
-@cli.command()
+@cli.group()
+def db():
+    """More database commands.
+
+    .. note:: Youuuuu can invoke more than one subcommand in one go.
+    """
+
+@db.command()
 @with_appcontext
 def init():
     """Create database repository."""
@@ -44,7 +51,7 @@ def init():
     click.secho('Database created!', bold=True, fg='green')
 
 
-@cli.command()
+@db.command()
 @click.option('-f', '--force', is_flag=True, callback=abort_if_false,
               expose_value=False,
               prompt='Are you sure you want to drop the db?')
@@ -59,7 +66,7 @@ def destroy():
     click.secho('Database dropped!', bold=True, fg='green')
 
 
-@cli.command()
+@db.command()
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @with_appcontext
 def create_schema(verbose):
@@ -86,13 +93,13 @@ def create_schema(verbose):
                 bold=True, fg='green')
 
 
-@cli.command()
+@db.command()
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @click.option('-f', '--force', is_flag=True, callback=abort_if_false,
               expose_value=False,
               prompt='Are you sure you want to drop the database schema (all data will be lost)?')
 @with_appcontext
-def drop(verbose):
+def drop_schema(verbose):
     """Drop the database schema.
 
     The tables will be dropped in reverse sort order of
