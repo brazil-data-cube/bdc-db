@@ -129,7 +129,7 @@ def create_namespace(verbose):
     click.secho(f'Creating namespace {schema}...', bold=True, fg='yellow')
 
     with _db.session.begin_nested():
-        _db.session.execute('CREATE SCHEMA {schema}')
+        _db.session.execute(f'CREATE SCHEMA {schema}')
     _db.session.commit()
 
-    click.secho('namespace created!', bold=True, fg='green')
+    click.secho('Namespace created!', bold=True, fg='green')
