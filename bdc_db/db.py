@@ -11,7 +11,17 @@
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import MetaData as _MetaData
 
-metadata = _MetaData()
+# Naming convention for SQLAlchemy constraint keys
+# See more in https://docs.sqlalchemy.org/en/13/core/constraints.html#configuring-constraint-naming-conventions
+NAMING_CONVENTION = {
+  "ix": 'idx_%(column_0_label)s',
+  "uq": "%(table_name)s_%(column_0_name)s_key",
+  "ck": "%(table_name)s_%(constraint_name)s_ckey",
+  "fk": "%(table_name)s_%(column_0_name)s_%(referred_table_name)s_fkey",
+  "pk": "%(table_name)s_pkey"
+}
+
+metadata = _MetaData(naming_convention=NAMING_CONVENTION)
 """Default database metadata object holding associated schema constructs."""
 
 
