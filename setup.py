@@ -76,6 +76,9 @@ setup(
     include_package_data=True,
     platforms='any',
     entry_points={
+        'console_scripts': [
+            'bdc-db = bdc_db.cli:cli'
+        ],
     },
     extras_require=extras_require,
     install_requires=install_requires,
