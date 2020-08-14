@@ -133,3 +133,17 @@ def create_namespace(verbose):
     _db.session.commit()
 
     click.secho('Namespace created!', bold=True, fg='green')
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@with_appcontext
+def create_extension_postgis(verbose):
+    """Create extension PostGIS in database."""
+    click.secho(f'Creating extension postgis...', bold=True, fg='yellow')
+
+    with _db.session.begin_nested():
+        _db.session.execute('CREATE EXTENSION IF NOT EXISTS postgis')
+    _db.session.commit()
+
+    click.secho('Extension created!', bold=True, fg='green')
