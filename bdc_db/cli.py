@@ -35,7 +35,7 @@ def cli():
 def db():
     """More database commands.
 
-    .. note:: Youuuuu can invoke more than one subcommand in one go.
+    .. note:: You can invoke more than one subcommand in one go.
     """
 
 @db.command()
@@ -114,3 +114,22 @@ def drop_schema(verbose):
             table.drop(bind=_db.engine, checkfirst=True)
 
     click.secho('Database schema dropped!', bold=True, fg='green')
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@with_appcontext
+def create_namespace(verbose):
+    """Create the table namespace (schema) in database."""
+    schema = _db.metadata.schema
+
+    if schema is None:
+        return click.secho('No namespace configured in metadata.', bold=True, fg='red')
+
+    click.secho(f'Creating namespace {schema}...', bold=True, fg='yellow')
+
+    with _db.session.begin_nested():
+        _db.session.execute('CREATE SCHEMA {schema}')
+    _db.session.commit()
+
+    click.secho('namespace created!', bold=True, fg='green')
