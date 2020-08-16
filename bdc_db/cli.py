@@ -130,6 +130,7 @@ def create_namespace(verbose):
 
     with _db.session.begin_nested():
         _db.session.execute(f'CREATE SCHEMA {schema}')
+
     _db.session.commit()
 
     click.secho('Namespace created!', bold=True, fg='green')
@@ -139,7 +140,7 @@ def create_namespace(verbose):
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @with_appcontext
 def create_extension_postgis(verbose):
-    """Create extension PostGIS in database."""
+    """Enables the PostGIS extenion in the database."""
     click.secho(f'Creating extension postgis...', bold=True, fg='yellow')
 
     with _db.session.begin_nested():
