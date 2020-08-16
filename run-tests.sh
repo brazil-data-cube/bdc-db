@@ -7,8 +7,8 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 
-pydocstyle bdc_db && \
-isort bdc_db setup.py --check-only --diff && \
+pydocstyle bdc_db tests setup.py  && \
+isort bdc_db tests setup.py --check-only --diff && \
 check-manifest --ignore ".travis-*" --ignore ".readthedocs.*" && \
-sphinx-build -qnW --color -b doctest docs/sphinx/ docs/sphinx/_build/doctest \
+sphinx-build -qnW --color -b doctest docs/sphinx/ docs/sphinx/_build/doctest && \
 pytest

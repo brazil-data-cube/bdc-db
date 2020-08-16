@@ -36,7 +36,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_copybutton',
     'sphinx_rtd_theme',
-    'sphinx_tabs.tabs',
+    # 'sphinx_tabs.tabs',
 ]
 
 # Paths that contain templates, relative to this directory.
