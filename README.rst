@@ -84,6 +84,13 @@ Developer Documentation
 See https://bdc-db.readthedocs.io/en/latest.
 
 
+Thanks
+======
+
+This module is based on `Invenio-DB <https://invenio-db.readthedocs.io/en/latest/>`_.
+Thanks the Invenio Team for providing a scalable way to deal with dynamic database models with `Flask-SQLALchemy <https://flask-sqlalchemy.palletsprojects.com/en/2.x/>`_.
+
+
 License
 =======
 
