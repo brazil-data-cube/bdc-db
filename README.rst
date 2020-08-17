@@ -41,18 +41,24 @@ Database Management Extension for Brazil Data Cube Applications and Services
         :alt: Release
 
 
-.. image:: https://badges.gitter.im/brazil-data-cube/community.svg/
-        :target: https://gitter.im/brazil-data-cube/community#
-        :alt: Join the chat
+.. image:: https://img.shields.io/discord/689541907621085198?logo=discord&logoColor=ffffff&color=7389D8
+        :target: https://discord.com/channels/689541907621085198#
+        :alt: Join us at Discord
 
 
 About
 =====
 
 
+BDC-DB is a database management extension for Brazil Data Cube Applications and Services. It simplifies the work with `Flask-SQLAlchemy <https://flask-sqlalchemy.palletsprojects.com/en/2.x/>`_ model classes and `Alembic <https://alembic.sqlalchemy.org/en/latest/index.html>`_ migration scripts.
+
+
+Other packages, applications and services can register database objects through standard Python entry point in ``setup.py``. See the `USAGE.rst <./USAGE.rst>`_ documentation on how to take advantage of this package.
+
 
 Installation
 ============
+
 
 See `INSTALL.rst <./INSTALL.rst>`_.
 
@@ -60,17 +66,27 @@ See `INSTALL.rst <./INSTALL.rst>`_.
 Usage
 =====
 
+
 See `USAGE.rst <./USAGE.rst>`_.
+
+
+Repository Organization
+=======================
+
+
+See `REPOSITORY.rst <REPOSITORY.rst>`_.
 
 
 Developer Documentation
 =======================
+
 
 See https://bdc-db.readthedocs.io/en/latest.
 
 
 License
 =======
+
 
 .. admonition::
     Copyright (C) 2020 INPE.

@@ -11,5 +11,12 @@ include *.rst
 include *.sh
 include LICENSE
 include pytest.ini
-recursive-include bdc_db *.py
+recursive-exclude docs/sphinx/_build *
 recursive-include bdc_db *.mako
+recursive-include bdc_db *.py
+recursive-include docs/sphinx *.ico
+recursive-include docs/sphinx *.png
+recursive-include docs/sphinx *.py
+recursive-include docs/sphinx *.rst
+recursive-include docs/sphinx Makefile
+recursive-include tests *.py

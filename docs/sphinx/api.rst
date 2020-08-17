@@ -11,4 +11,8 @@ BDC-DB Extension API
 
 
 .. automodule:: bdc_db.ext
-   :members:
+    :members:
+
+
+.. automodule:: bdc_db.db
+    :members:
