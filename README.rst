@@ -16,8 +16,8 @@ Database Management Extension for Brazil Data Cube Applications and Services
         :alt: Software License
 
 
-.. image:: https://travis-ci.com/brazil-data-cube/bdc-db.svg?branch=master
-        :target: https://travis-ci.com/brazil-data-cube/bdc-db
+.. image:: https://travis-ci.org/brazil-data-cube/bdc-db.svg?branch=master
+        :target: https://travis-ci.org/brazil-data-cube/bdc-db
         :alt: Build Status
 
 
