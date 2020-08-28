@@ -120,3 +120,51 @@ The output will be something like::
 
     Whenever you create a revision with ``alembic revision`` command, make sure you have set the parameter ``--branch``
     to ``BDC-DB`` put your migrations in the right place. Otherwise, it will move to ``site-packages/bdc_db/alembic``.
+
+
+Loading package SQL scripts SQLAlchemy and BDC-DB
+-------------------------------------------------
+
+
+The ``BDC-DB`` also supports to load files ``.sql`` dynamically using `Python Entry point specification <https://packaging.python.org/specifications/entry-points/>`_.
+
+
+It is quite useful if you need to configure you environment, setting up `PostgreSQL Plpgsql Triggers <https://www.postgresql.org/docs/12/plpgsql-trigger.html>`_ and default script data.
+
+
+To do that, you must define the entrypoint ``bdc_db.triggers`` in your application ``setup.py`` file as following:
+
+
+.. code-block:: python
+
+    entry_points={
+        'bdc_db.triggers': [
+            'myapp = myapp.triggers'
+        ],
+        'bdc_db.scripts': [
+            'myapp = myapp.scripts'
+        ]
+    }
+
+
+Once ``entrypoint`` is set, the ``BDC-DB`` will list entire directory for ``.sql`` files and map them to the application context.
+
+
+You can show the triggers loaded (In-Memory) by ``BDC-DB`` command line::
+
+    bdc-db db show-triggers
+
+
+To load them into the database system, use the command::
+
+    bdc-db db load-triggers
+
+
+You can also load all data scripts with command::
+
+    bdc-db db create-data
+
+
+.. note::
+
+    Make sure to have set ``SQLALCHEMY_DATABASE_URI``. Please refer to `Configurations <./configurations.html>`_ for further information.

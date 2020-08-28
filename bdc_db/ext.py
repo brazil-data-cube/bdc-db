@@ -9,6 +9,8 @@
 """Database management extension for Brazil Data Cube applications and services."""
 
 import os
+from pathlib import Path
+from typing import Dict, Iterable
 
 import pkg_resources
 from flask import current_app
@@ -48,6 +50,9 @@ class BrazilDataCubeDB:
         alembic: A Flask-Alembic instance used to prepare migration environment.
     """
 
+    triggers: Dict[str, Dict[str, str]] = None
+    scripts: Dict[str, Dict[str, str]] = None
+
     def __init__(self, app=None, **kwargs):
         """Initialize the database management extension.
 
@@ -55,11 +60,12 @@ class BrazilDataCubeDB:
             app: Flask application
             kwargs: Optional arguments to Flask-SQLAlchemy.
         """
+        self.triggers = dict()
+        self.scripts = dict()
         self.alembic = Alembic(run_mkdir=False, command_name='alembic')
 
         if app:
             self.init_app(app, **kwargs)
-
 
     def init_app(self, app, **kwargs):
         """Initialize Flask application instance.
@@ -72,6 +78,12 @@ class BrazilDataCubeDB:
             kwargs: Optional arguments to Flask-SQLAlchemy.
         """
         self.init_db(app, **kwargs)
+
+        # Load package triggers
+        self.load_triggers(**kwargs)
+
+        # Load package SQL scripts
+        self.load_scripts(**kwargs)
 
         # prepare the configuration for multiple named branches
         # according to each package entry point
@@ -118,7 +130,6 @@ class BrazilDataCubeDB:
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
 
-
     def init_db(self, app, entry_point_group = 'bdc_db.models', **kwargs):
         """Initialize Flask-SQLAlchemy extension.
 
@@ -149,3 +160,76 @@ class BrazilDataCubeDB:
         # All models should be loaded by now.
         # Initialize the inter-mapper relationships of all loaded mappers.
         configure_mappers()
+
+    def load_triggers(self, entry_point_group: str = 'bdc_db.triggers', **kwargs):
+        """Load trigger files from packages to BDC-DB context.
+
+        Seeks for .sql files in packages which set `bdc_db.triggers` entry point.
+
+        Notes:
+            It may throw exception when module is set, but does not exists in disk.
+
+        Args:
+            entry_point_group - Pattern to search in the setup.py entry points.
+        """
+        if entry_point_group:
+            triggers = self._load_module(entry_point_group)
+
+            for module, script in triggers.items():
+                for trigger in script:
+                    self.register_trigger(module, Path(trigger).stem, trigger)
+
+    def _load_module(self, entry_point) -> Dict[str, Iterable[str]]:
+        """Seek for files inside Python entry point."""
+        modules = dict()
+
+        if entry_point:
+            for base_entry in pkg_resources.iter_entry_points(entry_point):
+                package = base_entry.load()
+
+                directory = package.__path__
+
+                for path in directory._path:
+                    modules.setdefault(package.__name__, list())
+                    modules[package.__name__].extend(self._get_scripts(path))
+
+        return modules
+
+    def load_scripts(self, entry_point_group: str = 'bdc_db.scripts', **kwargs):
+        """Load SQL files from packages to BDC-DB context."""
+        scripts = self._load_module(entry_point_group)
+
+        for module, script in scripts.items():
+            for trigger in script:
+                self.register_scripts(module, Path(trigger).stem, trigger)
+
+    @staticmethod
+    def _get_scripts(path: str) -> Iterable[str]:
+        _path = Path(path)
+        found_scripts = []
+
+        for entry in _path.iterdir():
+            if entry.is_file() and entry.suffix == '.sql':
+                found_scripts.append(str(entry))
+
+        return found_scripts
+
+    def register_directory(self, module_name: str, path: str):
+        """Register a package script directory to the BDC-DB."""
+        _path = Path(path)
+
+        for entry in _path.iterdir():
+            if entry.is_file() and entry.suffix == '.sql':
+                self.register_trigger(module_name, entry.stem, str(entry))
+
+    def register_trigger(self, module_name: str, trigger_name: str, path: str):
+        """Register trigger command to BDC-DB."""
+        self.triggers.setdefault(module_name, dict())
+
+        self.triggers[module_name][trigger_name] = path
+
+    def register_scripts(self, module_name: str, trigger_name: str, path: str):
+        """Register trigger command to BDC-DB."""
+        self.scripts.setdefault(module_name, dict())
+
+        self.scripts[module_name][trigger_name] = path
