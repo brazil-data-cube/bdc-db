@@ -173,7 +173,7 @@ def create_triggers(verbose):
     ext = current_app.extensions['bdc-db']
 
     with _db.session.begin_nested():
-        if len(ext.scripts.keys()) == 0:
+        if len(ext.triggers.keys()) == 0:
             click.secho(f'No trigger configured.', bold=True, fg='yellow')
 
         for module_name, entry in ext.triggers.items():
