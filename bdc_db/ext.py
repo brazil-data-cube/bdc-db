@@ -77,6 +77,7 @@ class BrazilDataCubeDB:
             app: Flask application
             kwargs: Optional arguments to Flask-SQLAlchemy.
         """
+        from .cli import cli
         self.init_db(app, **kwargs)
 
         # Load package triggers
@@ -129,6 +130,8 @@ class BrazilDataCubeDB:
 
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
+
+        app.cli.add_command(cli, 'db')
 
     def init_db(self, app, entry_point_group = 'bdc_db.models', **kwargs):
         """Initialize Flask-SQLAlchemy extension.
