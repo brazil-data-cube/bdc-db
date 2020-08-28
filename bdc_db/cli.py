@@ -158,7 +158,7 @@ def show_triggers(verbose):
     """List or load the database triggers available in ``BDC-DB``."""
     ext = current_app.extensions['bdc-db']
 
-    for module_name, entry in ext.scripts.items():
+    for module_name, entry in ext.triggers.items():
         click.secho(f'Available triggers in "{module_name}"', bold=True, fg='green')
 
         for file_name, script in entry.items():
@@ -176,7 +176,7 @@ def create_triggers(verbose):
         if len(ext.scripts.keys()) == 0:
             click.secho(f'No trigger configured.', bold=True, fg='yellow')
 
-        for module_name, entry in ext.scripts.items():
+        for module_name, entry in ext.triggers.items():
             click.secho(f'Executing trigger from "{module_name}"', bold=True, fg='green')
 
             for file_name, script in entry.items():
