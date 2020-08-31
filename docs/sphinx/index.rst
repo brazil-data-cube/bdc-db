@@ -6,8 +6,12 @@
     under the terms of the MIT License; see LICENSE file for more details.
 
 
-BDC-DB Extension
-================
+.. include:: ../../README.rst
+    :end-before: Installation
+
+
+This module is based on the source code of `Invenio-DB <https://invenio-db.readthedocs.io/en/latest/>`_.
+Thanks the Invenio Team for providing a scalable way to deal with dynamic database models with `Flask-SQLALchemy <https://flask-sqlalchemy.palletsprojects.com/en/2.x/>`_.
 
 
 .. toctree::
@@ -17,8 +21,8 @@ BDC-DB Extension
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: API Reference
+   :maxdepth: 1
+   :caption: Documentation
 
    installation
    configurations

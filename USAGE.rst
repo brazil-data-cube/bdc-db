@@ -16,38 +16,79 @@ Command-Line Interface (CLI)
 
 The ``BDC-DB`` extension installs a command line tool named ``bdc-db`` that groups a set of database commands under the group ``db``:
 
-- ``create-schema``: Create the database schema (tables, primary keys, foreign keys).
-
-- ``drop-schema``: Drop the database schema (tables, primary keys, foreign keys).
-
 - ``init``: Initialize a new database repository if it doesn't exist.
-
-- ``destroy``: Drop the database repository.
 
 - ``create-namespace``: Create the table namespace (schema) in database.
 
-- ``create-extension-postgis``: Enables the PostGIS extenion in the database
+- ``create-extension-postgis``: Enables the PostGIS extenion in the database.
+
+- ``create-schema``: Create the database schema (tables, primary keys, foreign keys).
+
+- ``create-triggers``: Create in the database all triggers registered in the extension.
+
+- ``load-scripts``: Load and execute database scripts.
+
+- ``drop-schema``: Drop the database schema (tables, primary keys, foreign keys).
+
+- ``destroy``: Drop the database repository.
+
+- ``show-triggers``: List all registred triggers.
+
+- ``load-file``: Load and execute a script file into database.
 
 
 Preparing a new Package with Alembic and BDC-DB
 -----------------------------------------------
 
 
-The Alembic commands are available trough the ``alembic`` command group. These are the the commands for managing upgrade recipes.
+The Alembic commands are available trough the ``alembic`` command group. These are the commands for managing upgrade recipes:
+
+- ``branches``: Show branch points.
+
+- ``current``: Show current revision.
+
+- ``downgrade``: Run downgrade migrations.
+
+- ``heads``: Show latest revisions.
+
+- ``log``: Show revision log.
+
+- ``merge``: Create merge revision.
+
+- ``mkdir``: Make migration directory.
+
+- ``revision``: Create new migration.
+
+- ``show``: Show the given revisions.
+
+- ``stamp``: Set current revision.
+
+- ``upgrade``: Run upgrade migrations.
+
+
+.. note::
+
+    For more information, type in the command line::
+
+        bdc-db alembic --help
 
 
 The ``BDC-DB`` follows the `Python Entry point specification <https://packaging.python.org/specifications/entry-points/>`_ to
 discover and load libraries dynamically.
 
 
-Basically, the ``BDC-DB`` has two major entry points to deal with dynamic SQLAlchemy models:
+Basically, the ``BDC-DB`` has the following entry points to deal with dynamic SQLAlchemy models and daabase scripts:
 
-- ``bdc_db.alembic`` - The alembic migration folders.
+- ``bdc_db.alembic``: The alembic migration folders.
 
-- ``bdc_db.models`` - The initialization of your own models.
+- ``bdc_db.models``: The initialization of your own models.
+
+- ``bdc_db.triggers``: A folder with SQL scripts to create triggers.
+
+- `bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
 
 
-Both of them must be defined in the ``setup.py`` of your package if you would like to have database support.
+These entry points may be defined in the ``setup.py`` of your package if you would like to have database support.
 
 
 The following code is an example of an ``entry_points`` in ``setup.py`` file:
@@ -67,8 +108,7 @@ The following code is an example of an ``entry_points`` in ``setup.py`` file:
 
 .. note::
 
-    The package ``BDC-DB`` requires an instance of PostgreSQL listening up. You must set ``SQLALCHEMY_DATABASE_URI`` with your
-    own instance.
+    The package ``BDC-DB`` requires an instance of PostgreSQL listening up. You must set ``SQLALCHEMY_DATABASE_URI`` with your own instance.
 
 
 .. warning::
@@ -76,9 +116,7 @@ The following code is an example of an ``entry_points`` in ``setup.py`` file:
     When the entry points ``bdc_db.models`` and ``bdc_db.alembic`` is set, make sure you have the target values in your file system.
 
 
-To deal with migrations, you need to initialize the ``Alembic`` with the following command:
-
-.. code-block:: shell
+To deal with migrations, you need to initialize the ``Alembic`` with the following command::
 
     FLASK_APP=myapp flask alembic mkdir
 
@@ -101,10 +139,7 @@ You must follow the `SQLAlchemy Models <https://flask-sqlalchemy.palletsprojects
         version = db.Column(db.Integer())
 
 
-Once the model is set, you must generate a migration. To do that, use the command ``alembic revision``:
-
-
-.. code-block:: shell
+Once the model is set, you must generate a migration. To do that, use the command ``alembic revision``::
 
     FLASK_APP=myapp flask alembic revision "my app migration" --branch=myapp
 
@@ -118,8 +153,7 @@ The output will be something like::
 
 .. warning::
 
-    Whenever you create a revision with ``alembic revision`` command, make sure you have set the parameter ``--branch``
-    to ``BDC-DB`` put your migrations in the right place. Otherwise, it will move to ``site-packages/bdc_db/alembic``.
+    Whenever you create a revision with ``alembic revision`` command, make sure you have set the parameter ``--branch`` to ``BDC-DB``. This will put your migrations in the right place. Otherwise, it will move to ``site-packages/bdc_db/alembic``.
 
 
 Loading package SQL scripts SQLAlchemy and BDC-DB
@@ -129,7 +163,7 @@ Loading package SQL scripts SQLAlchemy and BDC-DB
 The ``BDC-DB`` also supports to load files ``.sql`` dynamically using `Python Entry point specification <https://packaging.python.org/specifications/entry-points/>`_.
 
 
-It is quite useful if you need to configure you environment, setting up `PostgreSQL Plpgsql Triggers <https://www.postgresql.org/docs/12/plpgsql-trigger.html>`_ and default script data.
+It is quite useful if you need to configure you environment, setting up `PostgreSQL PL/pgSQL Triggers <https://www.postgresql.org/docs/12/plpgsql-trigger.html>`_ and default script data.
 
 
 To do that, you must define the entrypoint ``bdc_db.triggers`` in your application ``setup.py`` file as following:
@@ -155,14 +189,14 @@ You can show the triggers loaded (In-Memory) by ``BDC-DB`` command line::
     bdc-db db show-triggers
 
 
-To load them into the database system, use the command::
+To register them into the database system, use the command::
 
-    bdc-db db load-triggers
+    bdc-db db create-triggers
 
 
 You can also load all data scripts with command::
 
-    bdc-db db create-data
+    bdc-db db load-scripts
 
 
 .. note::
