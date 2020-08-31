@@ -9,6 +9,7 @@
 """Command-Line Interface for BDC database management."""
 
 import click
+from flask import current_app
 from flask.cli import FlaskGroup, with_appcontext
 from sqlalchemy_utils.functions import (create_database, database_exists,
                                         drop_database)
@@ -148,3 +149,83 @@ def create_extension_postgis(verbose):
     _db.session.commit()
 
     click.secho('Extension created!', bold=True, fg='green')
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@with_appcontext
+def show_triggers(verbose):
+    """List or load the database triggers available in ``BDC-DB``."""
+    ext = current_app.extensions['bdc-db']
+
+    for module_name, entry in ext.triggers.items():
+        click.secho(f'Available triggers in "{module_name}"', bold=True, fg='green')
+
+        for file_name, script in entry.items():
+            click.secho(f'  -> {script}', bold=True, fg='green')
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@with_appcontext
+def create_triggers(verbose):
+    """List or load the database triggers available in ``BDC-DB``."""
+    ext = current_app.extensions['bdc-db']
+
+    with _db.session.begin_nested():
+        if len(ext.triggers.keys()) == 0:
+            click.secho(f'No trigger configured.', bold=True, fg='yellow')
+
+        for module_name, entry in ext.triggers.items():
+            click.secho(f'Executing trigger from "{module_name}"', bold=True, fg='green')
+
+            for file_name, script in entry.items():
+                with open(script) as f:
+                    content = f.read()
+
+                click.secho(f'  -> {script}', bold=True, fg='green')
+                _db.session.execute(content)
+
+    _db.session.commit()
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@with_appcontext
+def create_data(verbose):
+    """Load the database scripts available in ``BDC-DB`` package."""
+    ext = current_app.extensions['bdc-db']
+
+    with _db.session.begin_nested():
+        if len(ext.scripts.keys()) == 0:
+            click.secho(f'No scripts configured.', bold=True, fg='yellow')
+
+        for module_name, entry in ext.scripts.items():
+            click.secho(f'Executing script from "{module_name}"', bold=True, fg='green')
+
+            for file_name, script in entry.items():
+                with open(script) as f:
+                    content = f.read()
+
+                click.secho(f'  -> {script}', bold=True, fg='green')
+                _db.session.execute(content)
+
+    _db.session.commit()
+
+
+@db.command()
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@click.option('-f', '--file', type=click.File('r'),
+              help='A SQL input file for insert.',
+              required=True)
+@with_appcontext
+def load_file(verbose, file):
+    """Load and execute a script file into database."""
+    sql = file.read()
+
+    with _db.session.begin_nested():
+        _db.session.execute(sql)
+
+    _db.session.commit()
+
+    click.echo("Data inserted with success!")
