@@ -232,7 +232,7 @@ def load_file(verbose, file):
     """Load and execute a script file into database."""
     sql = file.read()
 
-    click.echo(f'Loading file {file}...', bold = True, fg = 'yellow')
+    click.secho(f'Loading file {file}...', bold = True, fg = 'yellow')
 
     if verbose:
         click.echo(sql)
@@ -242,4 +242,4 @@ def load_file(verbose, file):
 
     _db.session.commit()
 
-    click.echo(f'File {file} loaded!', bold = True, fg = 'green')
+    click.secho(f'File {file} loaded!', bold = True, fg = 'green')
