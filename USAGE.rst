@@ -85,7 +85,7 @@ Basically, the ``BDC-DB`` has the following entry points to deal with dynamic SQ
 
 - ``bdc_db.triggers``: A folder with SQL scripts to create triggers.
 
-- `bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
+- ``bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
 
 
 These entry points may be defined in the ``setup.py`` of your package if you would like to have database support.
