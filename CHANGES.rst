@@ -11,6 +11,17 @@ BDC-DB - Changes
 ================
 
 
+Version 0.4.1
+-------------
+
+
+Released 2020-09-04
+
+
+- Bug fixes:
+  - command ``load-file``, see #37.
+
+
 Version 0.4.0
 -------------
 
