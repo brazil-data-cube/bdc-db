@@ -11,6 +11,7 @@
 import click
 from flask import current_app
 from flask.cli import FlaskGroup, with_appcontext
+from sqlalchemy.sql.ddl import CreateSchema
 from sqlalchemy_utils.functions import (create_database, database_exists,
                                         drop_database)
 
@@ -119,21 +120,31 @@ def drop_schema(verbose):
 
 @db.command()
 @with_appcontext
-def create_namespace():
-    """Create the table namespace (schema) in database."""
-    schema = _db.metadata.schema
-
-    if schema is None:
-        return click.secho('No namespace configured in metadata.', bold=True, fg='red')
-
-    click.secho(f'Creating namespace {schema}...', bold=True, fg='yellow')
+def create_namespaces():
+    """Create the loaded table namespaces (schemas) in database."""
+    ext = current_app.extensions['bdc-db']
 
     with _db.session.begin_nested():
-        _db.session.execute(f'CREATE SCHEMA {schema}')
+        for namespace in ext.namespaces:
+            if not _db.engine.dialect.has_schema(_db.engine, namespace):
+                click.secho(f'Creating namespace {namespace}...', bold=True, fg='yellow')
+
+                _db.engine.execute(CreateSchema(namespace))
 
     _db.session.commit()
 
-    click.secho('Namespace created!', bold=True, fg='green')
+    click.secho('Namespaces created!', bold=True, fg='green')
+
+
+@db.command()
+@with_appcontext
+def show_namespaces():
+    """List the supported namespaces by BDC-DB extension."""
+    ext = current_app.extensions['bdc-db']
+
+    click.secho(f'Available namespaces: ', bold=True, fg='green')
+    for namespace in ext.namespaces:
+        click.secho(f'\t-> {namespace}', bold=True, fg='green')
 
 
 @db.command()
