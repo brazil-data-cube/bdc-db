@@ -10,7 +10,7 @@
 
 import os
 from pathlib import Path
-from typing import Dict, Iterable
+from typing import Dict, Iterable, List
 
 import pkg_resources
 from flask import current_app
@@ -52,6 +52,7 @@ class BrazilDataCubeDB:
 
     triggers: Dict[str, Dict[str, str]] = None
     scripts: Dict[str, Dict[str, str]] = None
+    namespaces: List[str] = []
 
     def __init__(self, app=None, **kwargs):
         """Initialize the database management extension.
@@ -78,6 +79,9 @@ class BrazilDataCubeDB:
             kwargs: Optional arguments to Flask-SQLAlchemy.
         """
         self.init_db(app, **kwargs)
+
+        # Load package namespaces
+        self.load_namespaces()
 
         # Load package triggers
         self.load_triggers(**kwargs)
@@ -160,6 +164,24 @@ class BrazilDataCubeDB:
         # All models should be loaded by now.
         # Initialize the inter-mapper relationships of all loaded mappers.
         configure_mappers()
+
+    def load_namespaces(self, entry_point: str = 'bdc_db.namespaces'):
+        """Load application namespaces dynamically using entry points.
+
+        Args:
+            entry_point - Pattern to search in the setup.py entry points.
+        """
+        for base_entry in pkg_resources.iter_entry_points(entry_point):
+            namespace = base_entry.load()
+
+            if not namespace:
+                raise RuntimeError(f'Invalid namespace {namespace} in {base_entry.module_name}')
+
+            if namespace in self.namespaces:
+                current_app.logger.warning(f'Namespace {namespace} already loaded. Skipping')
+                continue
+
+            self.namespaces.append(namespace)
 
     def load_triggers(self, entry_point_group: str = 'bdc_db.triggers', **kwargs):
         """Load trigger files from packages to BDC-DB context.

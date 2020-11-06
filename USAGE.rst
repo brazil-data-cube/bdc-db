@@ -83,9 +83,11 @@ Basically, the ``BDC-DB`` has the following entry points to deal with dynamic SQ
 
 - ``bdc_db.models``: The initialization of your own models.
 
-- ``bdc_db.triggers``: A folder with SQL scripts to create triggers.
+- ``bdc_db.namespaces``: Map of namespaces (table schema) to be created.
 
 - ``bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
+
+- ``bdc_db.triggers``: A folder with SQL scripts to create triggers.
 
 
 These entry points may be defined in the ``setup.py`` of your package if you would like to have database support.
@@ -102,6 +104,9 @@ The following code is an example of an ``entry_points`` in ``setup.py`` file:
         ],
         'bdc_db.models': [
             'myapp = myapp.models'
+        ],
+        'bdc_db.namespaces': [
+            'myapp = myapp.config:SCHEMA'
         ]
     }
 
@@ -123,9 +128,16 @@ To deal with migrations, you need to initialize the ``Alembic`` with the followi
 
 It will create a folder named ``alembic`` inside ``myapp`` folder. This folder will store all the migration of your project.
 
+(config.py)
+
+.. code-block:: python
+
+    SCHEMA = 'myapp'
+
 
 You must follow the `SQLAlchemy Models <https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/>`_ in order to deal with models and generate migrations with ``BDC-DB``:
 
+(models.py)
 
 .. code-block:: python
 
@@ -137,6 +149,17 @@ You must follow the `SQLAlchemy Models <https://flask-sqlalchemy.palletsprojects
         name = db.Column(db.String(), nullable=False)
         title = db.Column(db.String(), nullable=False)
         version = db.Column(db.Integer())
+
+
+To create `myapp` namespace, use::
+
+    FLASK_APP=myapp flask db create-namespaces
+
+
+The output will be something like::
+
+    Creating namespace myapp...
+    Namespace created!
 
 
 Once the model is set, you must generate a migration. To do that, use the command ``alembic revision``::
