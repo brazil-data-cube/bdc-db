@@ -11,22 +11,25 @@ BDC-DB - Changes
 ================
 
 
-Version 0.4.1
--------------
+Version 0.4.2 (2020-12-08)
+--------------------------
 
 
-Released 2020-09-04
+- New features:
+  - add an entry point to manage registered namespaces (`#43 <https://github.com/brazil-data-cube/bdc-db/issues/43>`_).
+
+
+
+Version 0.4.1 (2020-09-04)
+--------------------------
 
 
 - Bug fixes:
-  - command ``load-file``, see #37.
+  - command ``load-file`` (`#37 <https://github.com/brazil-data-cube/bdc-db/issues/37>`_).
 
 
-Version 0.4.0
--------------
-
-
-Released 2020-08-31
+Version 0.4.0 (2020-08-31)
+--------------------------
 
 
 - New features:
@@ -40,11 +43,8 @@ Released 2020-08-31
 
 
 
-Version 0.2.0
--------------
-
-
-Released 2020-08-17
+Version 0.2.0 (2020-08-17)
+--------------------------
 
 
 - First experimental version.
