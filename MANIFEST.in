@@ -9,6 +9,7 @@
 include *.py
 include *.rst
 include *.sh
+include *.yml
 include LICENSE
 include pytest.ini
 recursive-exclude docs/sphinx/_build *

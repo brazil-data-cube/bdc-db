@@ -16,13 +16,13 @@ Database Management Extension for Brazil Data Cube Applications and Services
         :alt: Software License
 
 
-.. image:: https://travis-ci.org/brazil-data-cube/bdc-db.svg?branch=master
-        :target: https://travis-ci.org/brazil-data-cube/bdc-db
+.. image:: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/bdc-db/status.svg
+        :target: https://drone.dpi.inpe.br/brazil-data-cube/bdc-db
         :alt: Build Status
 
 
-.. image:: https://coveralls.io/repos/github/brazil-data-cube/bdc-db/badge.svg?branch=master
-        :target: https://coveralls.io/github/brazil-data-cube/bdc-db?branch=master
+.. image:: https://codecov.io/gh/brazil-data-cube/bdc-db/branch/bdc-db/graph/badge.svg
+        :target: https://codecov.io/gh/brazil-data-cube/bdc-db
         :alt: Code Coverage Test
 
 
@@ -31,8 +31,8 @@ Database Management Extension for Brazil Data Cube Applications and Services
         :alt: Documentation Status
 
 
-.. image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
-        :target: https://www.tidyverse.org/lifecycle/#experimental
+.. image:: https://img.shields.io/badge/lifecycle-maturing-blue.svg
+        :target: https://www.tidyverse.org/lifecycle/#maturing
         :alt: Software Life Cycle
 
 
