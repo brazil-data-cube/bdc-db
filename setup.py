@@ -49,7 +49,7 @@ install_requires = [
     'Flask>=1.1.0',
     'Flask-SQLAlchemy>=2.4.0',
     'Flask-Alembic>=2.0.0',
-    'SQLAlchemy[postgresql_psycopg2binary]>=1.3.10',
+    'SQLAlchemy[postgresql_psycopg2binary]>=1.3,<1.4',  # Issue https://github.com/brazil-data-cube/bdc-db/issues/48
     'SQLAlchemy-Utils>=0.36.0',
     'alembic>=1.4.0',
 ]
