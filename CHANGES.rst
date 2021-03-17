@@ -11,6 +11,13 @@ BDC-DB - Changes
 ================
 
 
+Version 0.4.3 (2021-03-17)
+--------------------------
+
+
+- Keep SQLAlchemy in version 1.3 until SQLAlchemyUtils is updated for SQLAlchemy 1.4. (`#48 <https://github.com/brazil-data-cube/bdc-db/issues/48>`_).
+
+
 Version 0.4.2 (2020-12-08)
 --------------------------
 
