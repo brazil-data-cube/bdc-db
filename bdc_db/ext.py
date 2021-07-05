@@ -134,7 +134,7 @@ class BrazilDataCubeDB:
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
 
-    def init_db(self, app, entry_point_group = 'bdc_db.models', **kwargs):
+    def init_db(self, app, entry_point_group: str = 'bdc_db.models', **kwargs):
         """Initialize Flask-SQLAlchemy extension.
 
         Args:
