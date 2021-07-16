@@ -32,7 +32,7 @@ The ``BDC-DB`` extension installs a command line tool named ``bdc-db`` that grou
 
 - ``destroy``: Drop the database repository.
 
-- ``show-triggers``: List all registred triggers.
+- ``show-triggers``: List all registered triggers.
 
 - ``load-file``: Load and execute a script file into database.
 
@@ -128,18 +128,18 @@ To deal with migrations, you need to initialize the ``Alembic`` with the followi
 
 It will create a folder named ``alembic`` inside ``myapp`` folder. This folder will store all the migration of your project.
 
-(config.py)
 
 .. code-block:: python
+    :caption: config.py
 
     SCHEMA = 'myapp'
 
 
 You must follow the `SQLAlchemy Models <https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/>`_ in order to deal with models and generate migrations with ``BDC-DB``:
 
-(models.py)
 
 .. code-block:: python
+    :caption: models.py
 
     from bdc_db.db import db
 
