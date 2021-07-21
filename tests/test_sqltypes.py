@@ -2,13 +2,12 @@ from unittest import mock
 
 import jsonschema
 import pytest
+from demo_app.models import FakeModel
 from sqlalchemy.exc import StatementError
+from utils import mock_entry_points
 
 from bdc_db import BrazilDataCubeDB
 from bdc_db.db import db
-from demo_app.models import FakeModel
-
-from utils import mock_entry_points
 
 
 @mock.patch('pkg_resources.iter_entry_points', mock_entry_points)

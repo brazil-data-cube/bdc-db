@@ -9,6 +9,7 @@
 """Define models of the package demo_app."""
 
 from jsonschema import draft7_format_checker
+
 from bdc_db.db import db
 from bdc_db.sqltypes import JSONSchemaType
 

@@ -26,18 +26,16 @@ def test_cli(app):
 
     runner = CliRunner()
 
-    # result = runner.invoke(bdc_cli.init, [], obj=sinfo)
-    # assert result.exit_code == 0
+    if not database_exists(SQLALCHEMY_DATABASE_URI):
+        result = runner.invoke(bdc_cli.init, [], obj=sinfo)
+        assert result.exit_code == 0
+
     assert database_exists(SQLALCHEMY_DATABASE_URI)
 
     result = runner.invoke(bdc_cli.create_extension_postgis, [], obj=sinfo)
     assert result.exit_code == 0
     with app.app_context():
         assert db.engine.has_table('spatial_ref_sys', schema='public')
-
-    # result = runner.invoke(bdc_cli.destroy, ['--force'], obj=sinfo)
-    # assert result.exit_code == 0
-    # assert not database_exists(SQLALCHEMY_DATABASE_URI)
 
 
 if __name__ == '__main__':
