@@ -15,6 +15,7 @@ from typing import Dict, Iterable, List
 import pkg_resources
 from flask import current_app
 from flask_alembic import Alembic
+from invenio_jsonschemas import InvenioJSONSchemas
 from sqlalchemy.orm import configure_mappers
 
 from . import config as _config
@@ -53,6 +54,7 @@ class BrazilDataCubeDB:
     triggers: Dict[str, Dict[str, str]] = None
     scripts: Dict[str, Dict[str, str]] = None
     namespaces: List[str] = []
+    schemas: InvenioJSONSchemas = None
 
     def __init__(self, app=None, **kwargs):
         """Initialize the database management extension.
@@ -77,6 +79,10 @@ class BrazilDataCubeDB:
         Args:
             app: Flask application
             kwargs: Optional arguments to Flask-SQLAlchemy.
+
+        Keyword Args:
+            entry_point_group (str): Custom entry point group for SQLAlchemy database models.
+            entry_point_jsonschemas (str): Custom entry point group for JSONSchemas
         """
         self.init_db(app, **kwargs)
 
@@ -131,6 +137,8 @@ class BrazilDataCubeDB:
         # Initialize Flask-Alembic extension
         self.alembic.init_app(app)
 
+        self.schemas = InvenioJSONSchemas(app, entry_point_group=kwargs.get('entry_point_jsonschemas', 'bdc.schemas'))
+
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
 
@@ -151,6 +159,8 @@ class BrazilDataCubeDB:
 
         app.config.setdefault('SQLALCHEMY_ECHO',
                               _config.SQLALCHEMY_ECHO)
+
+        app.config.setdefault('JSONSCHEMAS_HOST', _config.JSONSCHEMAS_HOST)
 
         # Initialize Flask-SQLAlchemy extension.
         database = kwargs.get('db', _db)
