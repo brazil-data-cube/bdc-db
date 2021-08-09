@@ -34,6 +34,17 @@ steps:
       - .coverage
 
 
+- name: discord-notify
+  image: brazildatacube/bdc-drone-discord
+  settings:
+    webhook:
+      from_secret: discord_webhook
+  when:
+    status:
+      - failure
+      - success
+
+
 services:
 - name: postgis
   image: postgis/postgis:12-3.1
