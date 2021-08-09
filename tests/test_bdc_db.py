@@ -26,6 +26,7 @@ def test_cli(app):
 
     runner = CliRunner()
 
+    # Create minimal db
     if not database_exists(SQLALCHEMY_DATABASE_URI):
         result = runner.invoke(bdc_cli.init, [], obj=sinfo)
         assert result.exit_code == 0
