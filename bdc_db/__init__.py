@@ -11,6 +11,7 @@
 from flask import Flask
 
 from .ext import BrazilDataCubeDB
+from .sqltypes import JSONSchemaType
 from .version import __version__
 
 
@@ -30,5 +31,6 @@ def create_app(config):
 __all__ = (
     '__version__',
     'BrazilDataCubeDB',
+    'JSONSchemaType',
     'create_app'
 )
