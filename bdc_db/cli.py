@@ -239,11 +239,11 @@ def load_scripts(verbose):
               help='A SQL input file for insert.',
               required=True)
 @with_appcontext
-def load_file(verbose, file):
+def load_file(verbose, file: click.File):
     """Load and execute a script file into database."""
     sql = file.read()
 
-    click.secho(f'Loading file {file}...', bold = True, fg = 'yellow')
+    click.secho(f'Loading file {file.name}...', bold = True, fg = 'yellow')
 
     if verbose:
         click.echo(sql)
@@ -253,4 +253,4 @@ def load_file(verbose, file):
 
     _db.session.commit()
 
-    click.secho(f'File {file} loaded!', bold = True, fg = 'green')
+    click.secho(f'File {file.name} loaded!', bold = True, fg = 'green')
