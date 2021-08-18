@@ -11,18 +11,13 @@
 import pytest
 from flask import Flask
 
+from bdc_db import BrazilDataCubeDB, db
+
 
 @pytest.fixture
 def app():
     """Flask application fixture."""
     app = Flask(__name__)
 
-    return app
-
-
-@pytest.fixture
-def db():
-    """Return the SQLAlchemy database instance."""
-    from bdc_db.db import db
-
-    return db
+    with app.app_context():
+        yield app
