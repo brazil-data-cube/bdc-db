@@ -20,7 +20,7 @@ from .utils import validate_schema
 class JSONB(TypeDecorator):
     """Represent a Custom Data Type for dealing with JSONB and JSONSchemas on SQLAlchemy.
 
-    The :class:`bdc_db.sqltypes.JSONSchemaType` type includes the fully support of
+    The :class:`bdc_db.sqltypes.JSONB` type includes the fully support of
     `sqlalchemy.dialects.postgresql.JSONB <https://docs.sqlalchemy.org/en/14/dialects/postgresql.html#sqlalchemy.dialects.postgresql.JSONB>`_,
     including the JSONSchema validator.
 
