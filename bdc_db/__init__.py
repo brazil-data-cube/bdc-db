@@ -13,7 +13,7 @@ from flask import Flask
 from .db import db
 from .ext import BrazilDataCubeDB
 from .models import SpatialRefSys
-from .sqltypes import JSONSchemaType
+from .sqltypes import JSONB
 from .version import __version__
 
 
@@ -33,7 +33,7 @@ def create_app(config):
 __all__ = (
     '__version__',
     'BrazilDataCubeDB',
-    'JSONSchemaType',
+    'JSONB',
     'SpatialRefSys',
     'create_app',
     'db',

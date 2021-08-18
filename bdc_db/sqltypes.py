@@ -12,12 +12,12 @@
 from typing import Any
 
 from sqlalchemy import TypeDecorator
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB as _JSONB
 
 from .utils import validate_schema
 
 
-class JSONSchemaType(TypeDecorator):
+class JSONB(TypeDecorator):
     """Represent a Custom Data Type for dealing with JSONB and JSONSchemas on SQLAlchemy.
 
     The :class:`bdc_db.sqltypes.JSONSchemaType` type includes the fully support of
@@ -35,7 +35,7 @@ class JSONSchemaType(TypeDecorator):
     """Keep the JSONSchema relative file path."""
     _draft_checker: Any
     """The JSONSchema draft checker model version."""
-    impl = JSONB
+    impl = _JSONB
     """Set the SQLAlchemy Data Type to manage this custom type."""
 
     def __init__(self, schema: str, draft_checker=None, *args, **kwargs):
