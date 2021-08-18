@@ -17,4 +17,4 @@ SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', Fal
 SQLALCHEMY_ECHO = os.getenv('SQLALCHEMY_ECHO', False)
 
 JSONSCHEMAS_HOST = os.getenv('JSONSCHEMAS_HOST', 'brazildatacube.org')
-"""Define the hostname for any JSONSChemas supported by Brazil Data Cube."""
+"""Define the hostname for any JSONSchemas supported by Brazil Data Cube."""
