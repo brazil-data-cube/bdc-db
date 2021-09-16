@@ -17,6 +17,7 @@ from sqlalchemy_utils.functions import (create_database, database_exists,
 
 from . import create_app as _create_app
 from .db import db as _db
+from .utils import delete_trigger, list_triggers
 
 
 def abort_if_false(ctx, param, value):
@@ -39,6 +40,7 @@ def db():
 
     .. note:: You can invoke more than one subcommand in one go.
     """
+
 
 @db.command()
 @with_appcontext
@@ -204,10 +206,46 @@ def create_triggers(verbose):
 
 
 @db.command()
+@click.option('-p', '--preview', help='Preview the affected triggers (Do not remove).',
+              type=click.BOOL, is_flag=True, default=False)
+@with_appcontext
+def drop_triggers(preview: bool):
+    """Delete the triggers on database that were loaded by BDC-DB Modules."""
+    ext = current_app.extensions['bdc-db']
+    if len(ext.triggers.keys()) == 0:
+        click.secho(f'No trigger configured.', bold=True, fg='yellow')
+        return
+
+    db_triggers = list_triggers(_db.engine)
+
+    triggers_to_remove = []
+    for module_name, entry in ext.triggers.items():
+        for file_name, script in entry.items():
+            with open(script) as f:
+                sql = f.read()
+
+            for db_trigger in db_triggers:
+                # TODO: Compare using schema and trigger name
+                if db_trigger.trigger_name in sql:
+                    triggers_to_remove.append((module_name, script, db_trigger))
+
+    if triggers_to_remove:
+        context_msg = 'will be' if preview else 'was'
+        for (module_name, script_path, trigger) in triggers_to_remove:
+            if not preview:
+                delete_trigger(trigger.trigger_name, table=trigger.table_name, schema=trigger.schema, engine=_db.engine)
+            click.secho(f'The trigger "{trigger.trigger_name}" '
+                        f'{context_msg} removed. (from module {module_name})', bold=True, fg='yellow' if preview else 'green')
+        return
+
+    click.secho(f'No trigger available in db.', bold=True, fg='yellow')
+
+
+@db.command()
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @with_appcontext
 def load_scripts(verbose):
-    """Load the database scripts registred in ``BDC-DB`` extension."""
+    """Load the database scripts registered in ``BDC-DB`` extension."""
     ext = current_app.extensions['bdc-db']
 
     with _db.session.begin_nested():
