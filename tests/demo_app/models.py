@@ -11,7 +11,7 @@
 from jsonschema import draft7_format_checker
 
 from bdc_db.db import db
-from bdc_db.sqltypes import JSONSchemaType
+from bdc_db.sqltypes import JSONB
 
 
 class FakeModel(db.Model):
@@ -19,4 +19,4 @@ class FakeModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
-    properties = db.Column(JSONSchemaType('dummy-jsonschema.json', draft_checker=draft7_format_checker))
+    properties = db.Column(JSONB('dummy-jsonschema.json', draft_checker=draft7_format_checker))

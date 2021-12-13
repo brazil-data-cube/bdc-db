@@ -13,7 +13,7 @@ from flask.cli import ScriptInfo
 from sqlalchemy_utils.functions import database_exists
 
 import bdc_db.cli as bdc_cli
-from bdc_db import BrazilDataCubeDB
+from bdc_db import BrazilDataCubeDB, create_app
 from bdc_db.config import SQLALCHEMY_DATABASE_URI
 from bdc_db.db import db
 
@@ -25,6 +25,9 @@ def test_cli(app):
     sinfo = ScriptInfo(create_app=lambda _: app)
 
     runner = CliRunner()
+
+    # Test package initialization
+    _ = create_app(dict())
 
     # Create minimal db
     if not database_exists(SQLALCHEMY_DATABASE_URI):
