@@ -8,10 +8,12 @@
 
 """Utility for Image Catalog Extension."""
 
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, List
 
 import jsonschema
 from flask import current_app
+from sqlalchemy.engine import Engine
 
 
 def validate_schema(schema_key: str, value: Any, draft_checker=jsonschema.draft7_format_checker) -> Any:
@@ -37,3 +39,54 @@ def validate_schema(schema_key: str, value: Any, draft_checker=jsonschema.draft7
     jsonschema.validate(instance=value, schema=schema, format_checker=draft_checker)
 
     return value
+
+
+@dataclass
+class TriggerResult:
+    """Represent a Queryable Trigger Result."""
+
+    schema: str
+    table_name: str
+    trigger_schema: str
+    trigger_name: str
+    event: str
+    definition: str
+
+
+def list_triggers(engine: Engine) -> List[TriggerResult]:
+    """List all the available triggers on current engine.
+
+    Args:
+        engine (Engine): The activate SQLAlchemy database connector.
+    """
+    query_result = engine.execute(
+        "SELECT event_object_schema as schema,"
+        "       event_object_table as table_name,"
+        "       trigger_schema,"
+        "       trigger_name,"
+        "       action_statement as definition, "
+        "       string_agg(event_manipulation, ',') as trigger_event "
+        "  FROM information_schema.triggers "
+        "GROUP BY schema,table_name,trigger_schema,trigger_name,definition "
+        "ORDER BY schema, table_name"
+    )
+
+    return [
+        TriggerResult(trigger.schema, trigger.table_name, trigger.trigger_schema,
+                      trigger.trigger_name, trigger.trigger_event, trigger.definition)
+        for trigger in query_result
+    ]
+
+
+def delete_trigger(name: str, engine: Engine, table: str, schema: str = None):
+    """Delete a trigger context (if exists) on database.
+
+    Args:
+        name (str): The trigger name.
+        engine (Engine): The SQLAlchemy active database engine.
+        table (str): The table name.
+        schema (str): The table schema that the trigger is attached.
+    """
+    schema = schema or 'public'
+
+    engine.execute(f'DROP TRIGGER IF EXISTS {name} ON {schema}.{table}')

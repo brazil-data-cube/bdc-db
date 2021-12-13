@@ -17,6 +17,9 @@ from bdc_db.sqltypes import JSONB
 class FakeModel(db.Model):
     """Define a simple table to store names."""
 
+    __table_name__ = 'fake_model'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     properties = db.Column(JSONB('dummy-jsonschema.json', draft_checker=draft7_format_checker))
+    counter = db.Column(db.Integer, default=0)

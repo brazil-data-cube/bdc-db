@@ -246,14 +246,6 @@ class BrazilDataCubeDB:
 
         return found_scripts
 
-    def register_directory(self, module_name: str, path: str):
-        """Register a package script directory to the BDC-DB."""
-        _path = Path(path)
-
-        for entry in _path.iterdir():
-            if entry.is_file() and entry.suffix == '.sql':
-                self.register_trigger(module_name, entry.stem, str(entry))
-
     def register_trigger(self, module_name: str, trigger_name: str, path: str):
         """Register trigger command to BDC-DB."""
         self.triggers.setdefault(module_name, dict())

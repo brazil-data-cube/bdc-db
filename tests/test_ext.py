@@ -7,7 +7,7 @@ from flask.cli import ScriptInfo
 from pkg_resources import EntryPoint, resource_filename
 
 import bdc_db.cli as bdc_cli
-from bdc_db import BrazilDataCubeDB
+from bdc_db import BrazilDataCubeDB, db
 from tests.utils import mock_entry_points
 
 
@@ -46,11 +46,21 @@ class TestBDCExtension:
         """Test the dynamic entry point loading."""
         ext = BrazilDataCubeDB(app)
 
+        db.create_all()
+
         assert len(ext.namespaces) == 1
         assert ext.namespaces[0] == 'myapp'
         # Assert JSONSchema loaded
         schema = ext.schemas.get_schema('dummy-jsonschema.json')
         assert schema
+
+    @mock.patch('pkg_resources.iter_entry_points', mock_entry_points)
+    def test_create_schema_cli(self, app):
+        ext = BrazilDataCubeDB(app)
+        runner, script_info = self._get_cli(app)
+
+        result = runner.invoke(bdc_cli.create_schema, ['--verbose'], obj=script_info)
+        assert result.exit_code == 0
 
     @mock.patch('pkg_resources.iter_entry_points', mock_entry_points)
     def test_create_namespaces(self, app):
@@ -64,6 +74,11 @@ class TestBDCExtension:
         assert result.exit_code == 0
         for namespace in ext.namespaces:
             assert f'Creating namespace {namespace}...' in result.stdout
+
+        result = runner.invoke(bdc_cli.show_namespaces, [], obj=script_info)
+        assert result.exit_code == 0
+        for namespace in ext.namespaces:
+            assert f'\t-> {namespace}' in result.stdout
 
     @mock.patch('pkg_resources.iter_entry_points', mock_entry_point_invalid_namespace)
     def test_invalid_namespace(self, app):
@@ -103,3 +118,18 @@ class TestBDCExtension:
 
         assert result.exit_code == 0
         assert f'File {sample_file} loaded!' in result.stdout
+
+    @mock.patch('pkg_resources.iter_entry_points', mock_entry_points)
+    def test_triggers_destroy(self, app):
+        """Test destroy loaded triggers from database using command line."""
+        _ = BrazilDataCubeDB(app)
+
+        runner, script_info = self._get_cli(app)
+
+        result = runner.invoke(bdc_cli.drop_triggers, [], obj=script_info)
+        assert result.exit_code == 0
+
+        # Code cov
+        result = runner.invoke(bdc_cli.drop_triggers, [], obj=script_info)
+        assert result.exit_code == 0
+        assert "No trigger available in db." in result.stdout
