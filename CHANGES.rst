@@ -11,6 +11,16 @@ BDC-DB - Changes
 ================
 
 
+Version 0.6.0 (2021-12-21)
+--------------------------
+
+- Add SQL Type for `JSONB` with JSONSchemas validator (`#52 <https://github.com/brazil-data-cube/bdc-db/issues/52>`_).
+- Add new command line for `drop-triggers` (`#35 <https://github.com/brazil-data-cube/bdc-db/issues/35>`_).
+- Add SQLAlchemy model representation for PostGIS `spatial_ref_sys` (`#41 <https://github.com/brazil-data-cube/bdc-db/issues/41>`_).
+- Improve unittest and code coverage (`#26 <https://github.com/brazil-data-cube/bdc-db/issues/26>`_).
+- Migrate repo build to Drone CI (`#45 <https://github.com/brazil-data-cube/bdc-db/issues/45>`_).
+
+
 Version 0.4.3 (2021-03-17)
 --------------------------
 
