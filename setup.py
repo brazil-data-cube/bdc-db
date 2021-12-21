@@ -51,7 +51,7 @@ install_requires = [
     'Flask-Alembic>=2.0.0',
     'invenio-jsonschemas==1.1.3',
     'jsonschema>=3,<4',
-    'SQLAlchemy[postgresql_psycopg2binary]>=1.3,<1.4',  # Issue https://github.com/brazil-data-cube/bdc-db/issues/48
+    'SQLAlchemy[postgresql_psycopg2binary]>=1.3,<1.5',
     'SQLAlchemy-Utils>=0.36.0',
     'alembic>=1.4.0',
 ]
