@@ -83,6 +83,7 @@ class BrazilDataCubeDB:
         Keyword Args:
             entry_point_group (str): Custom entry point group for SQLAlchemy database models.
             entry_point_jsonschemas (str): Custom entry point group for JSONSchemas
+            engine_options (dict): Custom SQLAlchemy Engine Options for instance object.
         """
         self.init_db(app, **kwargs)
 
@@ -142,12 +143,13 @@ class BrazilDataCubeDB:
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
 
-    def init_db(self, app, entry_point_group: str = 'bdc_db.models', **kwargs):
+    def init_db(self, app, entry_point_group: str = 'bdc_db.models', engine_options=None, **kwargs):
         """Initialize Flask-SQLAlchemy extension.
 
         Args:
             app: Flask application
             entry_point_group: Entrypoint definition to load models
+            engine_options: DB instance engine options
             kwargs: optional Arguments to Flask-SQLAlchemy.
         """
         # Setup SQLAlchemy
@@ -161,6 +163,8 @@ class BrazilDataCubeDB:
                               _config.SQLALCHEMY_ECHO)
 
         app.config.setdefault('JSONSCHEMAS_HOST', _config.JSONSCHEMAS_HOST)
+
+        app.config.setdefault('SQLALCHEMY_ENGINE_OPTIONS', engine_options or _config.SQLALCHEMY_ENGINE_OPTIONS)
 
         # Initialize Flask-SQLAlchemy extension.
         database = kwargs.get('db', _db)

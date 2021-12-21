@@ -33,3 +33,11 @@ Defaults to ``False``."""
 
 JSONSCHEMAS_HOST = os.getenv('JSONSCHEMAS_HOST', 'brazildatacube.org')
 """Define the hostname for any JSONSchemas supported by Brazil Data Cube."""
+
+SQLALCHEMY_ENGINE_OPTIONS = dict(
+    pool_pre_ping=True
+)
+"""Set default engine options for SQLAlchemy instance.
+
+See more in `EngineOptions <https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine.params.pool>`_.
+"""
