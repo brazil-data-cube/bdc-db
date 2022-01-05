@@ -241,7 +241,7 @@ In order to do that, you must have to set the entrypoint `bdc.schemas` in `setup
 .. code-block:: python
 
     entry_points={
-        'bdc_db.jsonschemas': [
+        'bdc.schemas': [
             'myapp = myapp.jsonschemas'
         ],
         'bdc_db.models': [
