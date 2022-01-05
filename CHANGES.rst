@@ -11,6 +11,13 @@ BDC-DB - Changes
 ================
 
 
+Version 0.6.1 (2022-01-05)
+--------------------------
+
+- Improve documentation how to use `JSONB` with JSONSchemas (`#63 <https://github.com/brazil-data-cube/bdc-db/issues/63>`_).
+- Fix unittest with `JSONSchema` ref schema key (`#64 <https://github.com/brazil-data-cube/bdc-db/issues/64>`_).
+
+
 Version 0.6.0 (2021-12-21)
 --------------------------
 

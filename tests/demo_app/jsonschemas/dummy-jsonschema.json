@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "#dummy-jsonschema.json",
+    "$id": "dummy-jsonschema.json",
     "type": "object",
     "title": "Dummy JSONSchema",
     "description": "Define a simple JSONSchema for minimal tests.",
@@ -12,6 +12,11 @@
             "additionalProperties": true
         },
         "fieldStringRequired": {
+            "$ref": "#/definitions/dummyField"
+        }
+    },
+    "definitions": {
+        "dummyField": {
             "type": "string"
         }
     }
