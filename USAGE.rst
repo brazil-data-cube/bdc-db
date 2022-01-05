@@ -85,7 +85,7 @@ Basically, the ``BDC-DB`` has the following entry points to deal with dynamic SQ
 
 - ``bdc_db.namespaces``: Map of namespaces (table schema) to be created.
 
-- ``bdc_db.schemas``: A folder any JSONSchema files
+- ``bdc_db.schemas``: A folder with any JSONSchema files
 
 - ``bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
 
