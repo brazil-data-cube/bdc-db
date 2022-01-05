@@ -85,6 +85,8 @@ Basically, the ``BDC-DB`` has the following entry points to deal with dynamic SQ
 
 - ``bdc_db.namespaces``: Map of namespaces (table schema) to be created.
 
+- ``bdc_db.schemas``: A folder any JSONSchema files
+
 - ``bdc_db.scripts``: A folder with SQL scripts to be loaded and executed in the database.
 
 - ``bdc_db.triggers``: A folder with SQL scripts to create triggers.
@@ -225,3 +227,69 @@ You can also load all data scripts with command::
 .. note::
 
     Make sure to have set ``SQLALCHEMY_DATABASE_URI``. Please refer to `Configurations <./configurations.html>`_ for further information.
+
+
+Using SQLAlchemy JSONB fields with JSONSchemas
+----------------------------------------------
+
+.. versionadded:: 0.6.0
+
+We have created a new :class:`bdc_db.sqltypes.JSONB` to support the PostgreSQL JSONB fields with JSONSchema validation using `jsonschema <https://python-jsonschema.readthedocs.io/en/stable/>`_.
+
+In order to do that, you must have to set the entrypoint `bdc.schemas` in `setup.py`:
+
+.. code-block:: python
+
+    entry_points={
+        'bdc_db.jsonschemas': [
+            'myapp = myapp.jsonschemas'
+        ],
+        'bdc_db.models': [
+            'myapp = myapp.models'
+        ]
+    }
+
+After that, you must create a new folder `myapp.jsonschemas` with `__init__.py` inside. The `bdc-db` will be handle the entire folder
+according your `myapp` and you must use relative files to refer the JSONSchemas. We recommend you to create `myapp` inside `jsonschemas` to add a prefix and place any JSONSchema in this directory like following::
+
+    - myapp
+      - myapp
+        - __init__.py
+        - jsonschemas
+          - __init__.py
+          - myapp
+            - myschema.json
+      - setup.py
+
+
+And the create the ``models.py`` referring the `myapp/myschema.json`:
+
+.. code-block:: python
+
+    from bdc_db.db import db
+    from bdc_db.sqltypes import JSONB
+
+
+    class Collection(db.Model):
+        """Define a simple table to store collections."""
+
+        __table_name__ = 'collections'
+
+        id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+        name = db.Column(db.String, nullable=False)
+        properties = db.Column(JSONB('myapp/myschema.json'))
+
+With ``myapp.models.Collection`` is created, the :class:`bdc_db.sqltypes.JSONB` will validate the field `properties` with the given schema when model is added in memory.
+
+.. code-block:: python
+
+    from bdc_db.db import db
+    from flask import current_app
+    from myapp.models import Collection
+
+    with current_app.app_context():
+        collection = Collection(name='S2_L1C')
+        collection.properties = dict()
+
+        db.session.add(collection) # apply validation here
+
