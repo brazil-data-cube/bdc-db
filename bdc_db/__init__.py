@@ -17,7 +17,7 @@ from .sqltypes import JSONB
 from .version import __version__
 
 
-def create_app(config):
+def create_app():
     """Flask application factory.
 
     Returns:

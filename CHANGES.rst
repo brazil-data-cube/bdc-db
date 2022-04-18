@@ -11,6 +11,12 @@ BDC-DB - Changes
 ================
 
 
+Version 0.6.2 (2022-04-18)
+--------------------------
+
+- Fix extension initialization - variable not declared (`#66 <https://github.com/brazil-data-cube/bdc-db/issues/66>`_).
+
+
 Version 0.6.1 (2022-01-05)
 --------------------------
 
