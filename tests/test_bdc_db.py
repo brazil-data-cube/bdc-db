@@ -26,7 +26,7 @@ def test_cli(app):
     runner = app.test_cli_runner()
 
     # Test package initialization
-    _ = create_app(dict())
+    _ = create_app()
 
     # Create minimal db
     if not database_exists(SQLALCHEMY_DATABASE_URI):
