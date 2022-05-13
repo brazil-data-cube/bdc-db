@@ -37,6 +37,8 @@ class JSONB(TypeDecorator):
     """The JSONSchema draft checker model version."""
     impl = _JSONB
     """Set the SQLAlchemy Data Type to manage this custom type."""
+    cache_ok = True
+    """Enable cache context for JSONB type. It also removes SQLAlchemy Warnings."""
 
     def __init__(self, schema: str, draft_checker=None, *args, **kwargs):
         """Build a new data type."""

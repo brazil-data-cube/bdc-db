@@ -11,6 +11,12 @@ BDC-DB - Changes
 ================
 
 
+Version 0.6.3 (2022-05-13)
+--------------------------
+
+- Set custom JSONB property `cache_ok=True` for performance and to avoid SQLAlchemy warnings (`#68 <https://github.com/brazil-data-cube/bdc-db/issues/68>`_).
+
+
 Version 0.6.2 (2022-04-18)
 --------------------------
 

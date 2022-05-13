@@ -103,8 +103,7 @@ class BrazilDataCubeDB:
         version_locations = [
             (base_entry.name, pkg_resources.resource_filename(
                 base_entry.module_name, os.path.join(*base_entry.attrs, )
-            )) for base_entry in pkg_resources.iter_entry_points('bdc_db.alembic'
-            )
+            )) for base_entry in pkg_resources.iter_entry_points('bdc_db.alembic')
         ]
 
         if ('bdc_db', script_location) in version_locations:
