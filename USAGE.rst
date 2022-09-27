@@ -1,9 +1,19 @@
 ..
     This file is part of BDC-DB.
-    Copyright (C) 2020 INPE.
+    Copyright (C) 2022 INPE.
 
-    BDC-DB is a free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 
 Usage
@@ -18,7 +28,7 @@ The ``BDC-DB`` extension installs a command line tool named ``bdc-db`` that grou
 
 - ``init``: Initialize a new database repository if it doesn't exist.
 
-- ``create-namespace``: Create the table namespace (schema) in database.
+- ``create-namespaces``: Create the table namespaces (schema) in database.
 
 - ``create-extension-postgis``: Enables the PostGIS extenion in the database.
 
@@ -228,6 +238,8 @@ You can also load all data scripts with command::
 
     Make sure to have set ``SQLALCHEMY_DATABASE_URI``. Please refer to `Configurations <./configurations.html>`_ for further information.
 
+
+.. example_jsonb:
 
 Using SQLAlchemy JSONB fields with JSONSchemas
 ----------------------------------------------
