@@ -1,9 +1,19 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 2020 INPE.
+# Copyright (C) 2022 INPE.
 #
-# BDC-DB is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 
 
@@ -25,6 +35,51 @@ class JSONB(TypeDecorator):
     including the JSONSchema validator.
 
     .. versionadded:: 0.6.0
+
+    Examples:
+        This examples describes a minimal way to use :class:`bdc_db.sqltypes.JSONB`.
+        It expects you have module structure like described in :doc:`usage`, and the
+        ``myapp/myschema.json`` is defined as::
+
+            {
+                "$schema": "http://json-schema.org/draft-07/schema",
+                "$id": "myapp.json",
+                "type": "object",
+                "title": "Teste",
+                "required": [
+                    "mykey"
+                ],
+                "properties": {
+                    "mykey": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                    }
+                }
+            }
+
+        In the JSONSchema above, it contains the key ``mykey`` defined, which has the constraint that the
+        value ``MUST`` be between ``0`` and ``100``. The following section describes a minimal way to
+        insert your model into database:
+
+        .. doctest::
+            :skipIf: True
+
+            >>> from bdc_db.db import db
+            >>> from bdc_db.sqltypes import JSONB
+            >>> class Collection(db.Model):
+            ...      # Define a simple table to store collections.
+            ...      __table_name__ = 'collections'
+            ...      id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+            ...      name = db.Column(db.String, nullable=False)
+            ...      properties = db.Column(JSONB('myapp/myschema.json'))
+            >>> c = Collection()
+            >>> c.name = 'Teste'
+            >>> c.properties = {"mykey": 10}
+            >>> db.session.add(c)
+            >>> db.session.commit()
+            >>> c.properties = {"mykey": 102}
+            >>> db.session.commit()  # Error
 
     .. seealso::
 

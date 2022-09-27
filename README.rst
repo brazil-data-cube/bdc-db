@@ -1,9 +1,19 @@
 ..
     This file is part of BDC-DB.
-    Copyright (C) 2020 INPE.
+    Copyright (C) 2022 INPE.
 
-    BDC-DB is a free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 
 ============================================================================
@@ -11,19 +21,9 @@ Database Management Extension for Brazil Data Cube Applications and Services
 ============================================================================
 
 
-.. image:: https://img.shields.io/badge/license-MIT-green
+.. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
         :target: https://github.com/brazil-data-cube/bdc-db/blob/master/LICENSE
         :alt: Software License
-
-
-.. image:: https://drone.dpi.inpe.br/api/badges/brazil-data-cube/bdc-db/status.svg
-        :target: https://drone.dpi.inpe.br/brazil-data-cube/bdc-db
-        :alt: Build Status
-
-
-.. image:: https://codecov.io/gh/brazil-data-cube/bdc-db/branch/bdc-db/graph/badge.svg
-        :target: https://codecov.io/gh/brazil-data-cube/bdc-db
-        :alt: Code Coverage Test
 
 
 .. image:: https://readthedocs.org/projects/bdc-db/badge/?version=latest
@@ -31,8 +31,8 @@ Database Management Extension for Brazil Data Cube Applications and Services
         :alt: Documentation Status
 
 
-.. image:: https://img.shields.io/badge/lifecycle-maturing-blue.svg
-        :target: https://www.tidyverse.org/lifecycle/#maturing
+.. image:: https://img.shields.io/badge/lifecycle-stable-green.svg
+        :target: https://www.tidyverse.org/lifecycle/#stable
         :alt: Software Life Cycle
 
 
@@ -52,6 +52,7 @@ About
 
 BDC-DB is a database management extension for Brazil Data Cube Applications and Services. It simplifies the work with `Flask-SQLAlchemy <https://flask-sqlalchemy.palletsprojects.com/en/2.x/>`_ model classes and `Alembic <https://alembic.sqlalchemy.org/en/latest/index.html>`_ migration scripts.
 
+.. intro:
 
 Other packages, applications and services can register database objects through standard Python entry point in ``setup.py``. See the `USAGE.rst <./USAGE.rst>`_ documentation on how to take advantage of this package.
 
@@ -96,7 +97,10 @@ License
 
 
 .. admonition::
-    Copyright (C) 2020 INPE.
+    Copyright (C) 2022 INPE.
 
-    BDC-DB is a free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
