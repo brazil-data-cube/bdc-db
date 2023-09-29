@@ -18,11 +18,12 @@
 
 """Database management extension for Brazil Data Cube applications and services."""
 
+import importlib.resources
 import os
+from importlib.metadata import entry_points
 from pathlib import Path
 from typing import Dict, Iterable, List
 
-import pkg_resources
 from flask import current_app
 from flask_alembic import Alembic
 from invenio_jsonschemas import InvenioJSONSchemas
@@ -32,7 +33,7 @@ from . import config as _config
 from .db import db as _db
 
 
-def alembic_include_object(object, name, type_, reflected, compare_to):
+def alembic_include_object(object, name, type_, reflected, compare_to):  # pragma: no cover
     """Ignores the tables in 'exclude_tables'.
 
     For more information, please, refer to the
@@ -108,15 +109,17 @@ class BrazilDataCubeDB:
 
         # prepare the configuration for multiple named branches
         # according to each package entry point
-        script_location = pkg_resources.resource_filename('bdc_db', 'alembic')
+        script_location = importlib.resources.path('bdc_db', 'alembic')
+
+        entrypoints = entry_points(group="bdc_db.alembic")
 
         version_locations = [
-            (base_entry.name, pkg_resources.resource_filename(
-                base_entry.module_name, os.path.join(*base_entry.attrs, )
-            )) for base_entry in pkg_resources.iter_entry_points('bdc_db.alembic')
+            (base_entry.name, importlib.resources.path(
+                base_entry.name, os.path.join(*base_entry.attr, )
+            )) for base_entry in entrypoints
         ]
 
-        if ('bdc_db', script_location) in version_locations:
+        if ('bdc_db', script_location) in version_locations:  # pragma: no cover
             version_locations.remove(('bdc_db', script_location))
 
         app.config.setdefault('ALEMBIC', {
@@ -181,7 +184,7 @@ class BrazilDataCubeDB:
 
         # Loads all models
         if entry_point_group:
-            for base_entry in pkg_resources.iter_entry_points(entry_point_group):
+            for base_entry in entry_points(group=entry_point_group):
                 base_entry.load()
 
         # All models should be loaded by now.
@@ -194,11 +197,11 @@ class BrazilDataCubeDB:
         Args:
             entry_point - Pattern to search in the setup.py entry points.
         """
-        for base_entry in pkg_resources.iter_entry_points(entry_point):
+        for base_entry in entry_points(group=entry_point):
             namespace = base_entry.load()
 
             if not namespace:
-                raise RuntimeError(f'Invalid namespace {namespace} in {base_entry.module_name}')
+                raise RuntimeError(f'Invalid namespace {namespace} in {base_entry.name}')
 
             if namespace in self.namespaces:
                 current_app.logger.warning(f'Namespace {namespace} already loaded. Skipping')
@@ -229,7 +232,7 @@ class BrazilDataCubeDB:
         modules = dict()
 
         if entry_point:
-            for base_entry in pkg_resources.iter_entry_points(entry_point):
+            for base_entry in entry_points(group=entry_point):
                 package = base_entry.load()
 
                 directory = package.__path__

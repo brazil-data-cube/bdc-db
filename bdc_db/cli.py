@@ -1,6 +1,6 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 2022 INPE.
+# Copyright (C) 2023 INPE.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ from sqlalchemy_utils.functions import (create_database, database_exists,
 
 from . import create_app as _create_app
 from .db import db as _db
-from .utils import delete_trigger, list_triggers
+from .utils import delete_trigger, execute, has_schema, list_triggers
 
 
 def abort_if_false(ctx, param, value):
@@ -40,7 +40,7 @@ def abort_if_false(ctx, param, value):
 def cli():
     """Database commands.
 
-    .. note:: You can invoke more than one subcommand in one go.
+    . note:: You can invoke more than one subcommand in one go.
     """
 
 
@@ -48,7 +48,7 @@ def cli():
 def db():
     """More database commands.
 
-    .. note:: You can invoke more than one subcommand in one go.
+    . note:: You can invoke more than one subcommand in one go.
     """
 
 
@@ -59,8 +59,8 @@ def init():
     click.secho('Creating database {0}...'.format(_db.engine.url),
                 bold=True, fg='yellow')
 
-    if not database_exists(str(_db.engine.url)):
-        create_database(str(_db.engine.url))
+    if not database_exists(_db.engine.url):
+        create_database(_db.engine.url)
 
     click.secho('Database created!', bold=True, fg='green')
 
@@ -70,7 +70,7 @@ def init():
               expose_value=False,
               prompt='Are you sure you want to drop the db?')
 @with_appcontext
-def destroy():
+def destroy():  # pragma: no cover
     """Drop database repository."""
     click.secho('Dropping database {0}...'.format(_db.engine.url),
                 bold=True, fg='yellow')
@@ -91,7 +91,7 @@ def create_schema(verbose):
     """
     click.secho('Creating database schema...', bold=True, fg='yellow')
 
-    if not database_exists(str(_db.engine.url)):
+    if not database_exists(_db.engine.url):
         click.secho('Database repository does not exist. '
                     'Use option \'--init\' before!',
                     bold=True, fg='red')
@@ -113,7 +113,7 @@ def create_schema(verbose):
               expose_value=False,
               prompt='Are you sure you want to drop the database schema (all data will be lost)?')
 @with_appcontext
-def drop_schema(verbose):
+def drop_schema(verbose):  # pragma: no cover
     """Drop the database schema.
 
     The tables will be dropped in reverse sort order of
@@ -138,10 +138,9 @@ def create_namespaces():
 
     with _db.session.begin_nested():
         for namespace in ext.namespaces:
-            if not _db.engine.dialect.has_schema(_db.engine, namespace):
-                click.secho(f'Creating namespace {namespace}...', bold=True, fg='yellow')
-
-                _db.engine.execute(CreateSchema(namespace))
+            click.secho(f'Creating namespace {namespace}...', bold=True, fg='yellow')
+            if not has_schema(_db.engine, namespace):
+                execute(CreateSchema(namespace), executor=_db.session)
 
     _db.session.commit()
 
@@ -166,7 +165,7 @@ def create_extension_postgis():
     click.secho(f'Creating extension postgis...', bold=True, fg='yellow')
 
     with _db.session.begin_nested():
-        _db.session.execute('CREATE EXTENSION IF NOT EXISTS postgis')
+        execute('CREATE EXTENSION IF NOT EXISTS postgis', executor=_db.session)
     _db.session.commit()
 
     click.secho('Extension created!', bold=True, fg='green')
@@ -175,7 +174,7 @@ def create_extension_postgis():
 @db.command()
 @with_appcontext
 def show_triggers():
-    """List the trigger definition files registred in ``BDC-DB`` extension."""
+    """List the trigger definition files registered in ``BDC-DB`` extension."""
     ext = current_app.extensions['bdc-db']
 
     for module_name, entry in ext.triggers.items():
@@ -208,7 +207,7 @@ def create_triggers(verbose):
                 if verbose:
                     click.secho(content)
 
-                _db.session.execute(content)
+                execute(content, executor=_db.session)
 
             click.secho(f'Triggers from "{module_name}" registered', bold=True, fg='green')
 
@@ -245,7 +244,8 @@ def drop_triggers(preview: bool):
             if not preview:
                 delete_trigger(trigger.trigger_name, table=trigger.table_name, schema=trigger.schema, engine=_db.engine)
             click.secho(f'The trigger "{trigger.trigger_name}" '
-                        f'{context_msg} removed. (from module {module_name})', bold=True, fg='yellow' if preview else 'green')
+                        f'{context_msg} removed. (from module {module_name})',
+                        bold=True, fg='yellow' if preview else 'green')
         return
 
     click.secho(f'No trigger available in db.', bold=True, fg='yellow')
@@ -274,7 +274,7 @@ def load_scripts(verbose):
                 if verbose:
                     click.secho(content)
 
-                _db.session.execute(content)
+                execute(content, executor=_db.session)
 
             click.secho(f'Scripts from "{module_name}" executed!', bold=True, fg='green')
 
@@ -291,14 +291,14 @@ def load_file(verbose, file: click.File):
     """Load and execute a script file into database."""
     sql = file.read()
 
-    click.secho(f'Loading file {file.name}...', bold = True, fg = 'yellow')
+    click.secho(f'Loading file {file.name}...', bold=True, fg='yellow')
 
     if verbose:
         click.echo(sql)
 
     with _db.session.begin_nested():
-        _db.session.execute(sql)
+        execute(sql, executor=_db.session)
 
     _db.session.commit()
 
-    click.secho(f'File {file.name} loaded!', bold = True, fg = 'green')
+    click.secho(f'File {file.name} loaded!', bold=True, fg='green')
