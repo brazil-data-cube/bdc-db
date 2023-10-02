@@ -1,6 +1,6 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 202d INPE.
+# Copyright (C) 2023 INPE.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
