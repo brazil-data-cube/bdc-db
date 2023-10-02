@@ -163,3 +163,8 @@ class TestBDCExtension:
         dbext.triggers = {}
         result = runner.invoke(bdc_cli.drop_triggers, [])
         assert result.exit_code == 0
+
+    def test_compatibility(self, app):
+        _ = BrazilDataCubeDB(app)
+        # Temporary Compatibility for Flask-Alembic and code coverage
+        assert db == db.db

@@ -19,7 +19,6 @@
 """Database management extension for Brazil Data Cube applications and services."""
 
 import importlib.resources
-import os
 from importlib.metadata import entry_points
 from pathlib import Path
 from typing import Dict, Iterable, List
@@ -109,18 +108,18 @@ class BrazilDataCubeDB:
 
         # prepare the configuration for multiple named branches
         # according to each package entry point
-        script_location = importlib.resources.path('bdc_db', 'alembic')
+        script_location = str(importlib.resources.path('bdc_db', 'alembic'))
 
         entrypoints = entry_points(group="bdc_db.alembic")
 
         version_locations = [
-            (base_entry.name, importlib.resources.path(
+            (base_entry.name, str(importlib.resources.path(
                 base_entry.name, base_entry.attr
-            )) for base_entry in entrypoints
+            ))) for base_entry in entrypoints
         ]
 
         if ('bdc_db', script_location) in version_locations:  # pragma: no cover
-            version_locations.remove(('bdc_db', script_location))
+            version_locations.remove(('bdc_db', str(script_location)))
 
         app.config.setdefault('ALEMBIC', {
             'script_location': script_location,

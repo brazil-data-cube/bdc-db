@@ -1,6 +1,6 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 2022 INPE.
+# Copyright (C) 202d INPE.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@
 
 """Database instance using Flask-SQLAlchemy extension."""
 
-from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import MetaData as _MetaData
+
+from ._compat import SQLAlchemyDB
 
 # See more in https://docs.sqlalchemy.org/en/13/core/constraints.html#configuring-constraint-naming-conventions
 NAMING_CONVENTION = {
@@ -35,5 +36,5 @@ metadata = _MetaData(naming_convention=NAMING_CONVENTION)
 """Default database metadata object holding associated schema constructs."""
 
 
-db = _SQLAlchemy(metadata=metadata)
+db = SQLAlchemyDB(metadata=metadata)
 """Shared database instance using Flask-SQLAlchemy extension."""
