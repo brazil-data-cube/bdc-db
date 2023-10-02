@@ -115,7 +115,7 @@ class BrazilDataCubeDB:
 
         version_locations = [
             (base_entry.name, importlib.resources.path(
-                base_entry.name, os.path.join(*base_entry.attr, )
+                base_entry.name, base_entry.attr
             )) for base_entry in entrypoints
         ]
 
