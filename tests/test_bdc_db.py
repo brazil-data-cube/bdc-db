@@ -18,8 +18,6 @@
 
 """Unit-test for BrazilDataCubeExtension."""
 
-from click.testing import CliRunner
-from flask.cli import ScriptInfo
 from sqlalchemy import inspect
 from sqlalchemy_utils.functions import database_exists
 
@@ -39,9 +37,8 @@ def test_cli(app):
     _ = create_app()
 
     # Create minimal db
-    if not database_exists(SQLALCHEMY_DATABASE_URI):
-        result = runner.invoke(bdc_cli.init, [])
-        assert result.exit_code == 0
+    result = runner.invoke(bdc_cli.init, [])
+    assert result.exit_code == 0
 
     assert database_exists(SQLALCHEMY_DATABASE_URI)
 

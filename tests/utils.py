@@ -1,6 +1,6 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 2022 INPE.
+# Copyright (C) 2023 INPE.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,42 +18,43 @@
 
 """Define utility functions for unittests."""
 
-from pkg_resources import EntryPoint
+from importlib.metadata import EntryPoint
+
 from werkzeug.utils import import_string
 
 
 class MockEntryPoint(EntryPoint):
-    """Mock an Python Entrypoint."""
+    """Mock a Python Entrypoint."""
 
     def load(self):
         """Overwrite a dynamic loading of Entry point."""
         if self.name == 'importfail':
             raise ImportError()
         else:
-            _module = import_string(self.module_name)
+            _module = import_string(self.value)
             return _module.SCHEMA if getattr(_module, 'SCHEMA', None) else _module
 
 
-def mock_entry_points(name):
+def mock_entry_points(group=None, **kwargs):
     """Represent general mock entrypoint function to simulate a dynamic setup.py module loading."""
     data = {
         'bdc_db.namespaces': [
-            MockEntryPoint('demo_app', 'demo_app', attrs=('SCHEMA',)),
+            MockEntryPoint(name='demo_app', group=None, value='demo_app:SCHEMA'),
         ],
         'bdc_db.models': [
-            MockEntryPoint('demo_app', 'demo_app.models', attrs=(),),
+            MockEntryPoint(name='demo_app', group=None, value='demo_app.models'),
         ],
         'bdc.schemas': [
-            MockEntryPoint('demo_app', 'demo_app.jsonschemas', attrs=(),)
+            MockEntryPoint(name='demo_app', group=None, value='demo_app.jsonschemas')
         ],
         'bdc_db.triggers': [
-            MockEntryPoint('demo_app', 'demo_app.triggers', attrs=(), )
+            MockEntryPoint(name='demo_app', group=None, value='demo_app.triggers')
         ],
         'bdc_db.scripts': [
-            MockEntryPoint('demo_app', 'demo_app.scripts', attrs=(), )
+            MockEntryPoint(name='demo_app', group=None, value='demo_app.scripts')
         ]
     }
-    names = data.keys() if name is None else [name]
+    names = data.keys() if group is None else [group]
     for key in names:
         for entry_point in data.get(key, []):
             yield entry_point

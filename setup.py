@@ -34,10 +34,10 @@ docs_require = [
 ]
 
 tests_require = [
-    'coverage>=4.5',
-    'coveralls>=1.8',
-    'pytest>=5.2',
-    'pytest-cov>=2.8',
+    'coverage>=6.4',
+    'coveralls>=3.3',
+    'pytest>=7.4',
+    'pytest-cov>=4.1',
     'pytest-pep8>=1.0',
     'pydocstyle>=4.0',
     'isort>4.3',
@@ -56,14 +56,14 @@ setup_requires = [
 ]
 
 install_requires = [
-    'Flask>=1.1.0',
-    'Flask-SQLAlchemy>=2.4.0',
+    'Flask>=2',
+    'Flask-SQLAlchemy>=3.0',
     'Flask-Alembic>=2.0.0',
-    'invenio-jsonschemas==1.1.3',
-    'jsonschema>=3,<4',
-    'SQLAlchemy[postgresql_psycopg2binary]>=1.3,<1.5',
-    'SQLAlchemy-Utils>=0.36.0',
-    'alembic>=1.4.0',
+    'invenio-jsonschemas==1.1.4',
+    'jsonschema>=3',
+    'SQLAlchemy[postgresql_psycopg2binary]>=2',
+    'SQLAlchemy-Utils>=0.40.0',
+    'alembic>=1.12',
 ]
 
 packages = find_packages()
@@ -97,13 +97,16 @@ setup(
     setup_requires=setup_requires,
     tests_require=tests_require,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 3 - Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GPL v3 License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering :: GIS',
     ],

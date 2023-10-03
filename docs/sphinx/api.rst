@@ -1,6 +1,6 @@
 ..
     This file is part of BDC-DB.
-    Copyright (C) 2022 INPE.
+    Copyright (C) 2023 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,4 +32,11 @@ SQL Types
 ---------
 
 .. automodule:: bdc_db.sqltypes
+    :members:
+
+
+Utils
+-----
+
+.. automodule:: bdc_db.utils
     :members:
