@@ -1,6 +1,6 @@
 #
 # This file is part of BDC-DB.
-# Copyright (C) 2022 INPE.
+# Copyright (C) 2025 INPE.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,7 @@
 
 """Database management extension for Brazil Data Cube applications and services."""
 
-import importlib.resources
-from importlib.metadata import entry_points
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Dict, Iterable, List
 
@@ -30,6 +29,7 @@ from sqlalchemy.orm import configure_mappers
 
 from . import config as _config
 from .db import db as _db
+from .utils import entry_points
 
 
 def alembic_include_object(object, name, type_, reflected, compare_to):  # pragma: no cover
@@ -95,6 +95,9 @@ class BrazilDataCubeDB:
             entry_point_jsonschemas (str): Custom entry point group for JSONSchemas
             engine_options (dict): Custom SQLAlchemy Engine Options for instance object.
         """
+        if "bdc-db" in app.extensions:
+            return  # Ignore, already initialized.
+
         self.init_db(app, **kwargs)
 
         # Load package namespaces
@@ -108,15 +111,15 @@ class BrazilDataCubeDB:
 
         # prepare the configuration for multiple named branches
         # according to each package entry point
-        script_location = str(importlib.resources.path('bdc_db', 'alembic'))
+        script_location = resource_path("bdc_db.alembic")
 
         entrypoints = entry_points(group="bdc_db.alembic")
 
-        version_locations = [
-            (base_entry.name, str(importlib.resources.path(
-                base_entry.name, base_entry.attr
-            ))) for base_entry in entrypoints
-        ]
+        version_locations = []
+        for entry in entrypoints:
+            entry_name = f"{entry.name}.{entry.attr}"
+
+            version_locations.append((entry.name, resource_path(entry_name)))
 
         if ('bdc_db', script_location) in version_locations:  # pragma: no cover
             version_locations.remove(('bdc_db', str(script_location)))
@@ -154,18 +157,21 @@ class BrazilDataCubeDB:
         # Add BDC-DB extension to Flask extension list
         app.extensions['bdc-db'] = self
 
-    def init_db(self, app, entry_point_group: str = 'bdc_db.models', engine_options=None, **kwargs):
+    def init_db(self, app, entry_point_group: str = 'bdc_db.models', engine_options=None, uri: str = None, **kwargs):
         """Initialize Flask-SQLAlchemy extension.
 
         Args:
             app: Flask application
             entry_point_group: Entrypoint definition to load models
             engine_options: DB instance engine options
+            uri: the URI to override SQLAlchemy database uri from environment. Defaults to env ``SQLALCHEMY_DATABASE_URI``.
             kwargs: optional Arguments to Flask-SQLAlchemy.
         """
+        uri = uri or _config.SQLALCHEMY_DATABASE_URI
+
         # Setup SQLAlchemy
         app.config.setdefault('SQLALCHEMY_DATABASE_URI',
-                              _config.SQLALCHEMY_DATABASE_URI)
+                              uri)
 
         app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS',
                               _config.SQLALCHEMY_TRACK_MODIFICATIONS)
@@ -272,3 +278,17 @@ class BrazilDataCubeDB:
         self.scripts.setdefault(module_name, dict())
 
         self.scripts[module_name][trigger_name] = path
+
+
+def resource_path(entry_name: str):
+    """Resolve the module path.
+
+    Note:
+        This method returns None when not found or its invalid.
+    """
+    spec = find_spec(entry_name)
+
+    if spec and spec.submodule_search_locations:
+        path = list(spec.submodule_search_locations)[0]
+
+        return str(path)

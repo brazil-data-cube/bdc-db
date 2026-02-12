@@ -31,7 +31,7 @@ from .utils import delete_trigger, execute, has_schema, list_triggers
 
 
 def abort_if_false(ctx, param, value):
-    """Callback that checks the user confirmation of a command."""
+    """Define the callback that checks the user confirmation of a command."""
     if not value:
         ctx.abort()
 
@@ -161,7 +161,7 @@ def show_namespaces():
 @db.command()
 @with_appcontext
 def create_extension_postgis():
-    """Enables the PostGIS extenion in the database."""
+    """Enable the PostGIS extenion in the database."""
     click.secho(f'Creating extension postgis...', bold=True, fg='yellow')
 
     with _db.session.begin_nested():
@@ -207,7 +207,7 @@ def create_triggers(verbose):
                 if verbose:
                     click.secho(content)
 
-                execute(content, executor=_db.session)
+                execute(content, executor=_db.session, commit=False)
 
             click.secho(f'Triggers from "{module_name}" registered', bold=True, fg='green')
 

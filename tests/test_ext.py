@@ -15,17 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
-import importlib.resources
+import os
 from importlib.metadata import EntryPoint
 from unittest import mock
 
 import pytest
 from click.testing import CliRunner
+from utils import mock_entry_points
 
 import bdc_db.cli as bdc_cli
 from bdc_db import BrazilDataCubeDB, db
+from bdc_db.ext import resource_path
 from bdc_db.utils import list_triggers
-from tests.utils import mock_entry_points
 
 
 class FakeNamespaceEntryPoint(EntryPoint):
@@ -59,6 +60,8 @@ class TestBDCExtension:
 
     @mock.patch('bdc_db.ext.entry_points', mock_entry_points)
     @mock.patch('importlib_metadata.entry_points', mock_entry_points)
+    @mock.patch('importlib.metadata.entry_points', mock_entry_points)
+    @mock.patch('invenio_base.utils.entry_points', mock_entry_points)
     def test_load_provider_through_entrypoint(self, app):
         """Test the dynamic entry point loading."""
         ext = BrazilDataCubeDB(app)
@@ -115,7 +118,8 @@ class TestBDCExtension:
 
         result = runner.invoke(bdc_cli.show_triggers, [])
         assert result.exit_code == 0
-        trigger_file = importlib.resources.path('demo_app.triggers', 'dummy.sql')
+        module_path = resource_path('demo_app.triggers')
+        trigger_file = os.path.join(module_path, 'dummy.sql')
         assert str(trigger_file) in result.stdout
 
     def test_load_scripts(self, app):
@@ -131,7 +135,8 @@ class TestBDCExtension:
         assert f'Scripts from "demo_app.scripts" executed!' in load_scripts_result.stdout
 
         # load file manually
-        sample_file = importlib.resources.path("demo_app.scripts", "dummy.sql")
+        module_path = resource_path('demo_app.scripts')
+        sample_file = os.path.join(module_path, "dummy.sql")
         result = runner.invoke(bdc_cli.load_file, ['--file', sample_file, '--verbose'])
 
         assert result.exit_code == 0

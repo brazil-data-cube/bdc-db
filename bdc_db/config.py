@@ -27,12 +27,12 @@ import os
 
 SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI',
                                     'postgresql://postgres:postgres@localhost:5432/bdc')
-"""The database URI that should be used for the database connection. 
+"""The database URI that should be used for the database connection.
 
 Defaults to ``'postgresql://postgres:postgres@localhost:5432/bdc'``."""
 
 SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', False)
-"""Enable (True) or disable (False) signals before and after changes are committed to the database. 
+"""Enable (True) or disable (False) signals before and after changes are committed to the database.
 
 Defaults to ``False``."""
 
@@ -45,7 +45,11 @@ JSONSCHEMAS_HOST = os.getenv('JSONSCHEMAS_HOST', 'brazildatacube.org')
 """Define the hostname for any JSONSchemas supported by Brazil Data Cube."""
 
 SQLALCHEMY_ENGINE_OPTIONS = dict(
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    pool_recycle=int(os.getenv("SQLALCHEMY_ENGINE_POOL_RECYCLE", 3600)),
+    pool_size=int(os.getenv("SQLALCHEMY_ENGINE_POOL_SIZE", 2)),
+    max_overflow=int(os.getenv("SQLALCHEMY_ENGINE_MAX_OVERFLOW", 1)),
+    poolclass=os.getenv("SQLALCHEMY_ENGINE_POOL_CLASS"),
 )
 """Set default engine options for SQLAlchemy instance.
 

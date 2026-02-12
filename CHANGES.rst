@@ -1,6 +1,6 @@
 ..
     This file is part of BDC-DB.
-    Copyright (C) 2023 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,13 +21,16 @@ BDC-DB - Changes
 ================
 
 
-Version 0.8.0 (2023-10-02)
+Version 0.8.0 (2026-02-12)
 --------------------------
 
-- Upgrade libraries dependencies and support of SQLAlchemy 2x. (`#73 <https://github.com/brazil-data-cube/bdc-db/issues/73>`_).
-- Improve documentation for setup and extension.
-- Improve package Python version support: 3.8, 3.9, 3.10, 3.11+
-- Review unittests for bdc-db
+- Add support of pyproject toml (#78)
+- Add support of Python versions: 3.9, 3.10, 3.11, 3.12 and 3.13+
+- Drop support of pkg_resources (#77)
+- Review default values of SQLAlchemy engine options ``SQLALCHEMY_ENGINE_OPTIONS``.
+- Review documentation setup
+- Review unittests
+- Upgrade libraries dependencies and support of SQLAlchemy 2x. #73
 
 
 Version 0.6.3 (2022-09-22)

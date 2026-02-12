@@ -19,6 +19,14 @@
 
 pydocstyle bdc_db tests setup.py  && \
 isort bdc_db tests setup.py --check-only --diff && \
-check-manifest --ignore ".travis-*" --ignore ".readthedocs.*" && \
+check-manifest --ignore ".travis-*" && \
 sphinx-build -qnW --color -b doctest docs/sphinx/ docs/sphinx/_build/doctest && \
-pytest
+
+# When mode is package, just set context to wheel package name. Otherwise, it the local bdc_db fill fallback as default and no coverage will be found.
+if [ "${MODE}" == "package" ]; then
+    mkdir -p tmp && cd tmp
+    pytest ../tests --pyargs bdc_db --cov=bdc_db
+    cd .. && rm -r tmp
+else
+    pytest
+fi

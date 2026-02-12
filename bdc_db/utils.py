@@ -105,7 +105,7 @@ def delete_trigger(name: str, engine: Engine, table: str, schema: str = None):
     execute(f'DROP TRIGGER IF EXISTS {name} ON {schema}.{table}', engine)
 
 
-def execute(statement: t.Union[str, t.Any], executor: t.Union[Engine, t.Any], *args, **kwargs):
+def execute(statement: t.Union[str, t.Any], executor: t.Union[Engine, t.Any], commit=True, *args, **kwargs):
     """Execute a query statement in SQLAlchemy database engine.
 
     Args:
@@ -116,10 +116,12 @@ def execute(statement: t.Union[str, t.Any], executor: t.Union[Engine, t.Any], *a
         statement = text(statement)
 
     if isinstance(executor, Engine):
-        with executor.connect() as conn:
+        with executor.begin() as conn:
             result = conn.execute(statement, *args, **kwargs)
     else:
         result = executor.execute(statement, *args, **kwargs)
+        if commit:
+            executor.commit()
 
     return result
 
@@ -135,3 +137,31 @@ def has_schema(engine: Engine, schema: str, **kwargs) -> bool:
     """
     inspector = inspect(engine)
     return inspector.has_schema(schema, **kwargs)
+
+
+def entry_points(group):
+    """Retrieve the package entrypoints based on group name.
+
+    This method resolves the retro-compatibility between python versions.
+    On <3.10, the group property is not available due implementation.
+    To solve that, you should use importlib_metadata instead importlib.metadata.
+
+    This method should be removed when we drop support on python 3.9.
+    Its based on invenio-base:
+    https://github.com/inveniosoftware/invenio-base/blob/9f1b8ce862f9a865291f2adfe3916459b08c73e3/invenio_base/utils.py#L19
+    """
+    import importlib.metadata
+    from sys import version_info
+
+    if version_info < (3, 10):
+        eps = importlib.metadata.entry_points()
+        if isinstance(eps, dict):
+            eps = list(set(eps.get(group, [])))
+        else:
+            eps = {
+                ep.name: ep for ep in eps
+            }
+    else:
+        eps = importlib.metadata.entry_points(group=group)
+
+    return eps

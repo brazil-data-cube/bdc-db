@@ -29,7 +29,8 @@ from bdc_db.db import db
 
 
 @mock.patch('bdc_db.ext.entry_points', mock_entry_points)
-@mock.patch('importlib_metadata.entry_points', mock_entry_points)
+@mock.patch('importlib_metadata.entry_points', mock_entry_points) # < 3.10
+@mock.patch('importlib.metadata.entry_points', mock_entry_points)
 def test_validate_jsonschema_type(app):
     BrazilDataCubeDB(app)
 
